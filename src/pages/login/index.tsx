@@ -1,8 +1,11 @@
 import React from 'react'
+import Button from '../../component/Button'
 
 const LoginPage = () => {
   return (
-    <div>LoginPage</div>
+    <section>
+      <Button label='halo'/>
+    </section>
   )
 }
 

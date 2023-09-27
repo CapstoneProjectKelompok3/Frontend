@@ -1,9 +1,17 @@
-import React from 'react'
+import React from "react";
+import Sidebar from "../../../component/Sidebar";
+import Navbar from "../../../component/Navbar";
 
 const Dashboard = () => {
-  return (
-    <div>Dashboard</div>
-  )
-}
+  const rootElement = document.documentElement;
+  rootElement.style.backgroundColor = "#FAFAFA";
 
-export default Dashboard
+  return (
+    <section>
+      <Navbar />
+      <Sidebar />
+    </section>
+  );
+};
+
+export default Dashboard;
