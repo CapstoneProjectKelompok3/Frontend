@@ -7,7 +7,7 @@ interface ButtonProps {
 
 const Button: FC<ButtonProps> = ({label, onClick}) => {
   return (
-    <div className='bg-primary px-10 py-5 text-white' onClick={onClick}>
+    <div className='bg-primary rounded-md px-10 py-2 text-white text-center hover:bg-primary-hover' onClick={onClick}>
       {label}
     </div>
   )
