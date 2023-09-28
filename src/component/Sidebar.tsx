@@ -16,7 +16,7 @@ const Sidebar = () => {
               <div>Dashboard</div>
             </li>
           </Link>
-          <Link to='/'>
+          <Link to='/data-admin'>
             <li className="flex flex-row gap-x-4 align-middle rounded-md px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold">
               <div>
                 <i className="fa-solid fa-user"></i>
@@ -24,7 +24,7 @@ const Sidebar = () => {
               <div>Data Admin</div>
             </li>
           </Link>
-          <Link to='/'>
+          <Link to='/chat-layanan'>
             <li className="flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold">
               <div>
                 <i className="fa-solid fa-headset"></i>

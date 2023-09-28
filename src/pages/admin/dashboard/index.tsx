@@ -17,9 +17,7 @@ const Dashboard = () => {
     <section>
       <Navbar />
       <Sidebar />
-      <div className="ml-[20vw] pt-24 px-8">
-        {/* <Button label="Bagus" /> */}
-        {/* <Input label="Tes" placeholder="masuk" icon={<i className="fa-regular fa-user"></i>} /> */}
+      <div className="ml-[20vw] pt-28 px-8">
         <div className="flex flex-wrap gap-4">
           <Card title='28 Unit' description='Rumah Sakit' img={medic} />
           <Card title='17 Unit' description='Pemadam' img={fire} />
