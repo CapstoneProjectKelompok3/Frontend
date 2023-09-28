@@ -11,8 +11,8 @@ const Card: React.FC<Card> = ({ title, description, img }) => {
           <img src={img} alt="" />
         </div>
         <div>
-          <div className='font-extrabold text-2xl'>{title}</div>
-          <div className='text-2xl'>{description}</div>
+          <div className='font-extrabold text-xl'>{title}</div>
+          <div className='text-xl'>{description}</div>
         </div>
       </div>
     </div>

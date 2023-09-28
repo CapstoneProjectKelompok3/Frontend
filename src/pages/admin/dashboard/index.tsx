@@ -1,13 +1,13 @@
+import React from "react";
 import Sidebar from "../../../component/Sidebar";
 import Navbar from "../../../component/Navbar";
-import Button from "../../../component/Button";
-import Input from "../../../component/Input";
 import medic from '../../../assets/medic.png'
 import fire from '../../../assets/fire.png'
 import corps from '../../../assets/corps.png'
 import timsar from '../../../assets/timsar.png'
 import dishub from '../../../assets/dishub.png'
 import Card from "../../../component/Card";
+import Input from "../../../component/Input";
 
 const Dashboard = () => {
   const rootElement = document.documentElement;
@@ -17,9 +17,7 @@ const Dashboard = () => {
     <section>
       <Navbar />
       <Sidebar />
-      <div className="ml-[20vw] pt-24 px-8">
-        {/* <Button label="Bagus" /> */}
-        {/* <Input label="Tes" placeholder="masuk" icon={<i className="fa-regular fa-user"></i>} /> */}
+      <div className="ml-[20vw] pt-28 px-8">
         <div className="flex flex-wrap gap-4">
           <Card title='28 Unit' description='Rumah Sakit' img={medic} />
           <Card title='17 Unit' description='Pemadam' img={fire} />
@@ -28,6 +26,7 @@ const Dashboard = () => {
           <Card title='2 Unit' description='Dishub' img={dishub} />
           <Card title='28' description='Kasus' img={dishub} />
           <Card title='17' description='Petugas' img={dishub} />
+          <Input search={<i className="fa-solid fa-address-card"></i>} placeholder="sadad"/>
         </div>
       </div>
     </section>
