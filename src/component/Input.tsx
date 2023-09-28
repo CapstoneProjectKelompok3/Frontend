@@ -23,7 +23,7 @@ const Input: FC<InputProps> = ({
 
   return (
     <div>
-      {
+      { location.pathname === "/login" ||
       location.pathname === "/register" ? (
         <div className="flex flex-col">
           <label className="text-secondary">{label}</label>
