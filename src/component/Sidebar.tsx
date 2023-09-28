@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -9,7 +8,7 @@ const Sidebar = () => {
           Emergency <span className="text-primary">CallCenter</span> <div className="text-[20px]">Indonesia</div>
         </div>
         <ul className="list-none px-3 mt-4">
-          <Link to='/'>
+          <Link to='/dashboard'>
             <li className="flex flex-row gap-x-4 align-middle rounded-md bg-primary text-white px-10 py-3 mb-3 font-semibold">
               <div>
                 <i className="fa-solid fa-house"></i>
@@ -33,7 +32,7 @@ const Sidebar = () => {
               <div>Chat Service</div>
             </li>
           </Link>
-          <Link to='/'>
+          <Link to='/kasus'>
             <li className="flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold">
               <div>
                 <i className="fa-solid fa-copy"></i>
@@ -41,7 +40,7 @@ const Sidebar = () => {
               <div>Kasus</div>
             </li>
           </Link>
-          <Link to='/'>
+          <Link to='/data-petugas'>
             <li className="flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold">
               <div>
                 <i className="fa-solid fa-users"></i>

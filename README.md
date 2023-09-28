@@ -4,24 +4,26 @@ This template provides a minimal setup to get React working in Vite with HMR and
 
 Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# **Conventional commits**
+`feat` : new features<br>
+`fix` : fix something, e.g bugs<br>
+`ref` : refactor code<br>
+`docs` : documentation<br>
+`chore` : change to the build process, e.g add depedencies<br>
+`style` : not affect to the code, e.g formatting, missing semi-colons, white space, etc<br>
+`test` : add test or correcting existing tests<br>
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+Example : 
+```bash
+git commit -m "feat: add register"
+git commit -m "fix: nullable name at register page"
+git commit -m "ref: make the code short and simple at register handler"
+git commit -m "docs: add the documentation at register page"
+git commit -m "style: add some white space at register handler to handle the confusion"
+git commit -m "test: add test for register handler"
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+<br>
+
+# **References**
+[conventional-commits](https://gist.github.com/Zekfad/f51cb06ac76e2457f11c80ed705c95a3)
