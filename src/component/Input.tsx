@@ -29,8 +29,8 @@ const Input: FC<InputProps> = ({
 
   return (
     <div>
-      { location.pathname === "/login" ||
-      location.pathname === "/register" ? (
+      {location.pathname === "/login" ||
+        location.pathname === "/register" ? (
         <div className="flex flex-col">
           <label className="text-secondary">{label}</label>
           <div className="flex flex-row">
@@ -46,13 +46,13 @@ const Input: FC<InputProps> = ({
           </div>
         </div>
       ) : search ? (
-        <div className={`flex flex-col ${className}`}>
+        <div className='flex flex-col'>
           <label className="text-secondary">{label}</label>
-          <div className="flex flex-row gap-x-3 items-center border-solid border-[1px] px-4 py-3 rounded-md">
+          <div className="flex flex-row gap-x-2 items-center border-solid border-[1px] px-4 py-2 rounded-md">
           {search}
           <input
               type={type}
-              className={`bg-transparent focus:outline-none  w-full `}
+              className={`bg-transparent focus:outline-none p-2 w-full`}
               placeholder={placeholder}
               value={value}
               name={name}
@@ -61,10 +61,10 @@ const Input: FC<InputProps> = ({
           </div>
         </div>
       ) :
-      (
-        <div className="flex flex-col">
-          <label className="text-secondary">{label}</label>
-          <input
+        (
+          <div className="flex flex-col">
+            <label className="text-secondary">{label}</label>
+            <input
               type={type}
               className={`bg-transparent border-2 rounded-md focus:outline-none py-2 px-5 mb-4 ${className}`}
               placeholder={placeholder}
@@ -72,8 +72,8 @@ const Input: FC<InputProps> = ({
               name={name}
               onChange={onChange}
             />
-        </div>
-      )}
+          </div>
+        )}
     </div>
   );
 };
