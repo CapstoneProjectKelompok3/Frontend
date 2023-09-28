@@ -9,12 +9,19 @@ const DataOfficer = () => {
   const rootElement = document.documentElement;
   rootElement.style.backgroundColor = "#FAFAFA";
   const [open, setOpen] = useState(false)
+  const [edit, setEdit] = useState(false)
 
   const handleclick = () => {
     setOpen(true)
   }
   const handleClose = () => {
     setOpen(false)
+  }
+  const handleEdit = () => {
+    setEdit(true)
+  }
+  const handleEditClose = () => {
+    setEdit(false)
   }
   return (
     <section>
@@ -60,7 +67,7 @@ const DataOfficer = () => {
                       <div className='cursor-pointer hover:text-primary'>
                         <i className="fa-solid fa-trash text-lg"></i>
                       </div>
-                      <div className='cursor-pointer hover:text-primary'>
+                      <div onClick={handleEdit} className='cursor-pointer hover:text-primary'>
                         <i className="fa-solid fa-pen-to-square text-lg"></i>
                       </div>
                     </div>
@@ -78,6 +85,44 @@ const DataOfficer = () => {
                   <div className="px-6 py-6 lg:px-8">
                     <div className="mb-4 text-xl text-center font-bold text-black">
                       Tambah Petugas
+                    </div>
+                    <form className="space-y-4" action="#">
+                      <div>
+                        <label className="block py-1 text-sm font-medium text-black">
+                          Nama <span className='text-primary'>*</span>
+                        </label>
+                        <input type="text" className="input input-bordered bg-white w-full text-secondary font-medium input-md max-w-lg" placeholder="Masukkan Nama" />
+                      </div>
+                      <div>
+                        <label className="block py-1 text-sm font-medium text-black">
+                          Email <span className='text-primary'>*</span>
+                        </label>
+                        <input type="text" className="input input-bordered bg-white w-full text-secondary font-medium input-md max-w-lg" placeholder="Masukkan Email" />
+                      </div>
+                      <div>
+                        <label className="block py-1 text-sm font-medium text-black">
+                          NIK <span className='text-primary'>*</span>
+                        </label>
+                        <input type="text" className="input input-bordered bg-white w-full text-secondary font-medium input-md max-w-lg" placeholder="Masukkan NIK" />
+                      </div>
+                      <div className="py-2">
+                        <Button onClick={handleclick} label='Tambahkan' />
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </Popup>
+          )
+        }
+        {
+          edit && (
+            <Popup onConfirm={handleEditClose}>
+              <div className="relative w-full max-w-md max-h-full">
+                <div className="relative w-96 bg-white rounded-lg shadow">
+                  <div className="px-6 py-6 lg:px-8">
+                    <div className="mb-4 text-xl text-center font-bold text-black">
+                      Edit Petugas
                     </div>
                     <form className="space-y-4" action="#">
                       <div>

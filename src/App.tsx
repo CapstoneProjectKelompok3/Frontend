@@ -1,4 +1,3 @@
-import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import LoginPage from './pages/login'
 import Register from './pages/register'
@@ -13,6 +12,7 @@ import Profile from './pages/officer/profile'
 import LandingPage from './pages/user/landingPage'
 import LocationShare from './pages/user/location'
 import Message from './pages/user/message'
+import DataGoverment from './pages/admin/dataGoverment'
 
 const App = () => {
   return (
@@ -26,6 +26,7 @@ const App = () => {
         <Route element={<ChatService/>} path='/chat-layanan' />
         <Route element={<DataOfficer/>} path='/data-petugas' />
         <Route element={<Case/>} path='/kasus' />
+        <Route element={<DataGoverment/>} path='/data-goverment' />
 
         <Route element={<DetailJob/>} path='/detail-pekerjaan' />
         <Route element={<Profile/>} path='/profile' />
