@@ -46,7 +46,7 @@ const Input: FC<InputProps> = ({
           </div>
         </div>
       ) : search ? (
-        <div className={`flex flex-col`}>
+        <div className='flex flex-col'>
           <label className="text-secondary">{label}</label>
           <div className="flex flex-row gap-x-2 items-center border-solid border-[1px] px-4 py-2 rounded-md">
           {search}
