@@ -14,6 +14,8 @@ import LandingPage from "./pages/user/landingPage";
 import LocationShare from "./pages/user/location";
 import Message from "./pages/user/message";
 import { Toaster } from "react-hot-toast";
+import DataGoverment from "./pages/admin/dataGoverment";
+import DriverDashboard from './pages/driver/dashboard'
 
 const App = () => {
   return (
@@ -26,7 +28,9 @@ const App = () => {
         <Route element={<DataAdmin />} path="/data-admin" />
         <Route element={<ChatService />} path="/chat-layanan" />
         <Route element={<DataOfficer />} path="/data-petugas" />
+        <Route element={<DataGoverment />} path="/data-goverment" />
         <Route element={<Case />} path="/kasus" />
+
 
         <Route element={<DetailJob />} path="/detail-pekerjaan" />
         <Route element={<Profile />} path="/profile" />
@@ -35,6 +39,8 @@ const App = () => {
         <Route element={<LandingPage />} path="/beranda" />
         <Route element={<LocationShare />} path="/lokasi" />
         <Route element={<Message />} path="/chat" />
+
+        <Route element={<DriverDashboard />} path="/petugas/dashboard" />
       </Routes>
 
       <Toaster position="top-center" reverseOrder={false} />

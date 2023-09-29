@@ -24,6 +24,14 @@ const Sidebar = () => {
               <div>Data Admin</div>
             </li>
           </Link>
+          <Link to='/data-goverment'>
+            <li className="flex flex-row gap-x-4 align-middle rounded-md px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold">
+              <div>
+              <i className="fa-regular fa-building"></i>
+              </div>
+              <div>Data Goverment</div>
+            </li>
+          </Link>
           <Link to='/chat-layanan'>
             <li className="flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold">
               <div>
