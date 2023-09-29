@@ -15,6 +15,7 @@ import LocationShare from "./pages/user/location";
 import Message from "./pages/user/message";
 import { Toaster } from "react-hot-toast";
 import DataGoverment from "./pages/admin/dataGoverment";
+import History from "./pages/user/history";
 
 const App = () => {
   return (
@@ -33,11 +34,12 @@ const App = () => {
 
         <Route element={<DetailJob />} path="/detail-pekerjaan" />
         <Route element={<Profile />} path="/profile" />
-        <Route element={<HistoryJob />} path="/riwayat" />
+        <Route element={<HistoryJob />} path="/riwayat-petugas" />
 
         <Route element={<LandingPage />} path="/beranda" />
         <Route element={<LocationShare />} path="/lokasi" />
         <Route element={<Message />} path="/chat" />
+        <Route element={<History />} path="/riwayat" />
       </Routes>
 
       <Toaster position="top-center" reverseOrder={false} />
