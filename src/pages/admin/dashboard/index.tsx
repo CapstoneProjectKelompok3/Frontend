@@ -7,7 +7,6 @@ import corps from '../../../assets/corps.png'
 import timsar from '../../../assets/timsar.png'
 import dishub from '../../../assets/dishub.png'
 import Card from "../../../component/Card";
-import Input from "../../../component/Input";
 
 const Dashboard = () => {
   const rootElement = document.documentElement;
@@ -26,7 +25,6 @@ const Dashboard = () => {
           <Card title='2 Unit' description='Dishub' img={dishub} />
           <Card title='28' description='Kasus' img={dishub} />
           <Card title='17' description='Petugas' img={dishub} />
-          <Input search={<i className="fa-solid fa-address-card"></i>} placeholder="sadad"/>
         </div>
       </div>
     </section>

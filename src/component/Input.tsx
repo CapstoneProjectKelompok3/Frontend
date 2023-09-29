@@ -52,7 +52,7 @@ const Input: FC<InputProps> = ({
           {search}
           <input
               type={type}
-              className={`bg-transparent focus:outline-none p-2 w-full`}
+              className={`bg-transparent focus:outline-none w-full`}
               placeholder={placeholder}
               value={value}
               name={name}
