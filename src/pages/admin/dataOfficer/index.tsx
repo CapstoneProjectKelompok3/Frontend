@@ -23,11 +23,12 @@ const DataOfficer = () => {
   const handleEditClose = () => {
     setEdit(false)
   }
+  
   return (
     <section>
       <Navbar />
       <Sidebar />
-      <div className="ml-[20vw] pt-32 px-8">
+      <div className="ml-[20vw] pt-28 px-8">
         <div className="bg-white rounded-md p-10">
           <div className="flex justify-between items-center py-3 gap-4">
             <div>
@@ -40,7 +41,7 @@ const DataOfficer = () => {
           <div className="overflow-x-auto border rounded-md">
             <table className="table">
               <thead>
-                <tr className="bg-primary border-none rounded-md text-white text-lg">
+                <tr className="bg-primary border-none rounded-md text-white text-[16px]">
                   <th>No</th>
                   <th>Nama</th>
                   <th>Email</th>
@@ -64,11 +65,11 @@ const DataOfficer = () => {
                   </td>
                   <td>
                     <div className='flex gap-7'>
-                      <div className='cursor-pointer hover:text-primary'>
-                        <i className="fa-solid fa-trash text-lg"></i>
-                      </div>
                       <div onClick={handleEdit} className='cursor-pointer hover:text-primary'>
-                        <i className="fa-solid fa-pen-to-square text-lg"></i>
+                        <i className="fa-solid fa-pen-to-square text-md"></i>
+                      </div>
+                      <div className='cursor-pointer hover:text-primary'>
+                        <i className="fa-solid fa-trash text-md"></i>
                       </div>
                     </div>
                   </td>
@@ -88,22 +89,13 @@ const DataOfficer = () => {
                     </div>
                     <form className="space-y-4" action="#">
                       <div>
-                        <label className="block py-1 text-sm font-medium text-black">
-                          Nama <span className='text-primary'>*</span>
-                        </label>
-                        <input type="text" className="input input-bordered bg-white w-full text-secondary font-medium input-md max-w-lg" placeholder="Masukkan Nama" />
+                        <Input label='Nama' placeholder='Masukkan Nama' star={true}/>
                       </div>
                       <div>
-                        <label className="block py-1 text-sm font-medium text-black">
-                          Email <span className='text-primary'>*</span>
-                        </label>
-                        <input type="text" className="input input-bordered bg-white w-full text-secondary font-medium input-md max-w-lg" placeholder="Masukkan Email" />
+                        <Input label='Email' placeholder='Masukkan Email' star={true}/>
                       </div>
                       <div>
-                        <label className="block py-1 text-sm font-medium text-black">
-                          NIK <span className='text-primary'>*</span>
-                        </label>
-                        <input type="text" className="input input-bordered bg-white w-full text-secondary font-medium input-md max-w-lg" placeholder="Masukkan NIK" />
+                        <Input label='Nik' placeholder='Masukkan Nik' star={true}/>
                       </div>
                       <div className="py-2">
                         <Button onClick={handleclick} label='Tambahkan' />
@@ -125,23 +117,14 @@ const DataOfficer = () => {
                       Edit Petugas
                     </div>
                     <form className="space-y-4" action="#">
-                      <div>
-                        <label className="block py-1 text-sm font-medium text-black">
-                          Nama <span className='text-primary'>*</span>
-                        </label>
-                        <input type="text" className="input input-bordered bg-white w-full text-secondary font-medium input-md max-w-lg" placeholder="Masukkan Nama" />
+                    <div>
+                        <Input label='Nama' placeholder='Masukkan Nama' star={true}/>
                       </div>
                       <div>
-                        <label className="block py-1 text-sm font-medium text-black">
-                          Email <span className='text-primary'>*</span>
-                        </label>
-                        <input type="text" className="input input-bordered bg-white w-full text-secondary font-medium input-md max-w-lg" placeholder="Masukkan Email" />
+                        <Input label='Email' placeholder='Masukkan Email' star={true}/>
                       </div>
                       <div>
-                        <label className="block py-1 text-sm font-medium text-black">
-                          NIK <span className='text-primary'>*</span>
-                        </label>
-                        <input type="text" className="input input-bordered bg-white w-full text-secondary font-medium input-md max-w-lg" placeholder="Masukkan NIK" />
+                        <Input label='Nik' placeholder='Masukkan Nik' star={true}/>
                       </div>
                       <div className="py-2">
                         <Button onClick={handleclick} label='Tambahkan' />

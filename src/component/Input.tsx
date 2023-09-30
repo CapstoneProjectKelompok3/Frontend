@@ -10,6 +10,7 @@ interface InputProps {
   type?: string;
   name?: string;
   className?: string;
+  star?: boolean;
   onChange?: (value: any) => void;
 }
 
@@ -22,6 +23,7 @@ const Input: FC<InputProps> = ({
   type,
   name,
   className,
+  star,
   onChange,
 }) => {
 
@@ -32,7 +34,7 @@ const Input: FC<InputProps> = ({
       {location.pathname === "/login" ||
         location.pathname === "/register" ? (
         <div className="flex flex-col">
-          <label className="text-secondary">{label}</label>
+          <label className="text-secondary">{label} {star ? <span className="text-red-500">*</span> : null}</label>
           <div className="flex flex-row">
             <input
               type={type}
@@ -47,12 +49,12 @@ const Input: FC<InputProps> = ({
         </div>
       ) : search ? (
         <div className='flex flex-col'>
-          <label className="text-secondary">{label}</label>
+          <label className="text-secondary">{label} {star ? <span className="text-red-500">*</span> : null}</label>
           <div className="flex flex-row gap-x-2 items-center border-solid border-[1px] px-4 py-2 rounded-md">
           {search}
           <input
               type={type}
-              className={`bg-transparent focus:outline-none p-2 w-full`}
+              className={`bg-transparent focus:outline-none w-full`}
               placeholder={placeholder}
               value={value}
               name={name}
@@ -63,10 +65,10 @@ const Input: FC<InputProps> = ({
       ) :
         (
           <div className="flex flex-col">
-            <label className="text-secondary">{label}</label>
+            <label className="text-secondary">{label} {star ? <span className="text-red-500">*</span> : null} </label>
             <input
               type={type}
-              className={`bg-transparent border-2 rounded-md focus:outline-none py-2 px-5 mb-4 ${className}`}
+              className={`${className} bg-transparent border-[1px] rounded-md focus:outline-none py-2 px-5 `}
               placeholder={placeholder}
               value={value}
               name={name}

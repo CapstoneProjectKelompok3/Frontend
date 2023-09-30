@@ -1,11 +1,10 @@
 import profile from '../../../assets/profile.png'
-import Input from '../../../component/Input'
 const Profile = () => {
   return (
     <div className="h-screen w-full">
       <div>
         <div className='container mx-auto'>
-          <div className="w-full h-64 bg-[#0E1C32]">
+          <div className="w-full h-64 bg-primary">
             <div className="py-5 px-4 font-semibold text-white">
               Profile
             </div>

@@ -73,7 +73,7 @@ const Register = () => {
             </div>
             <div className="text-center">
               Sudah punya akun?{" "}
-              <Link to="/register" className="text-red-500 hover:text-red-700">
+              <Link to="/login" className="text-red-500 hover:text-red-700">
                 Masuk Disini
               </Link>
             </div>

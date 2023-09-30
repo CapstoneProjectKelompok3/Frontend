@@ -16,6 +16,7 @@ import Message from "./pages/user/message";
 import { Toaster } from "react-hot-toast";
 import DataGoverment from "./pages/admin/dataGoverment";
 import History from "./pages/user/history";
+import DashboardPetugas from "./pages/officer/dashboard";
 
 const App = () => {
   return (
@@ -31,7 +32,7 @@ const App = () => {
         <Route element={<DataGoverment />} path="/data-goverment" />
         <Route element={<Case />} path="/kasus" />
 
-
+        <Route element={<DashboardPetugas />} path="/dashboard-petugas" />
         <Route element={<DetailJob />} path="/detail-pekerjaan" />
         <Route element={<Profile />} path="/profile" />
         <Route element={<HistoryJob />} path="/riwayat-petugas" />
@@ -40,8 +41,8 @@ const App = () => {
         <Route element={<LocationShare />} path="/lokasi" />
         <Route element={<Message />} path="/chat" />
         <Route element={<History />} path="/riwayat" />
-      </Routes>
 
+      </Routes>
       <Toaster position="top-center" reverseOrder={false} />
     </BrowserRouter>
   );
