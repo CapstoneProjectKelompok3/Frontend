@@ -3,10 +3,25 @@ import Input from "../../../component/Input"
 import Navbar from "../../../component/Navbar"
 import Popup from "../../../component/Popup"
 import Sidebar from "../../../component/Sidebar"
-import { useState } from 'react'
+import Cookie from "js-cookie";
+import { useEffect, useState } from 'react'
+import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
+
 const DataGoverment = () => {
     const [open, setOpen] = useState(false)
     const [edit, setEdit] = useState(false)
+    const token = Cookie.get("token");
+  const navigate = useNavigate()
+  
+  useEffect(() => {
+    if(!token) {
+      navigate('/login')
+      setTimeout(() => {
+        toast.error("Silahkan Login Terlebih Dahulu")
+      }, 200);
+    }
+  }, [])
 
     const handleclick = () => {
         setOpen(true)

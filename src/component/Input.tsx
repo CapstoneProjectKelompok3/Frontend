@@ -11,6 +11,8 @@ interface InputProps {
   name?: string;
   className?: string;
   star?: boolean;
+  disabled?: boolean;
+  onBlur?: (event: any) => void;
   onChange?: (value: any) => void;
 }
 
@@ -24,6 +26,8 @@ const Input: FC<InputProps> = ({
   name,
   className,
   star,
+  disabled,
+  onBlur,
   onChange,
 }) => {
 
@@ -42,7 +46,9 @@ const Input: FC<InputProps> = ({
               placeholder={placeholder}
               value={value}
               name={name}
+              disabled={disabled}
               onChange={onChange}
+              onBlur={onBlur}
             />
             <div className="border-b-[1px] py-1 text-secondary mb-4">{icon}</div>
           </div>
@@ -58,6 +64,7 @@ const Input: FC<InputProps> = ({
               placeholder={placeholder}
               value={value}
               name={name}
+              disabled={disabled}
               onChange={onChange}
             />
           </div>
@@ -72,6 +79,7 @@ const Input: FC<InputProps> = ({
               placeholder={placeholder}
               value={value}
               name={name}
+              disabled={disabled}
               onChange={onChange}
             />
           </div>

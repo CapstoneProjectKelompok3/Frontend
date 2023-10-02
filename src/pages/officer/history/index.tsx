@@ -1,7 +1,23 @@
 import React from 'react'
 import Card from '../../../component/Card'
+import Cookie from "js-cookie";
+import { useEffect } from 'react'
+import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const HistoryJob = () => {
+  const token = Cookie.get("token");
+  const navigate = useNavigate()
+  
+  useEffect(() => {
+    if(!token) {
+      navigate('/login')
+      setTimeout(() => {
+        toast.error("Silahkan Login Terlebih Dahulu")
+      }, 200);
+    }
+  }, [])
+
   return (
     <section className="px-5 pt-10 pb-5">
       <div className="mt-8">

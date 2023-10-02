@@ -1,5 +1,22 @@
 import sirine from '../../../assets/sirine.png'
+import Cookie from "js-cookie";
+import { useEffect, useState } from 'react'
+import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
+
 const LandingPage = () => {
+  const token = Cookie.get("token");
+  const navigate = useNavigate()
+  
+  useEffect(() => {
+    if(!token) {
+      navigate('/login')
+      setTimeout(() => {
+        toast.error("Silahkan Login Terlebih Dahulu")
+      }, 200);
+    }
+  }, [])
+
   return (
     <div className="h-screen w-full relative">
       <div className="container mx-auto relative z-10">

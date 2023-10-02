@@ -1,8 +1,24 @@
 import Input from "../../../component/Input"
 import Navbar from "../../../component/Navbar"
 import Sidebar from "../../../component/Sidebar"
+import Cookie from "js-cookie";
+import { useEffect } from 'react'
+import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const Case = () => {
+  const token = Cookie.get("token");
+  const navigate = useNavigate()
+  
+  useEffect(() => {
+    if(!token) {
+      navigate('/login')
+      setTimeout(() => {
+        toast.error("Silahkan Login Terlebih Dahulu")
+      }, 200);
+    }
+  }, [])
+
   return (
     <section>
       <Navbar />
