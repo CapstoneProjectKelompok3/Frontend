@@ -8,16 +8,24 @@ import axios from 'axios'
 import Popup from '../../../component/Popup';
 import Input from '../../../component/Input';
 import Button from '../../../component/Button';
+import { validateProfile } from '../../../validate/auth';
 const Profile = () => {
   const token = Cookie.get("token");
+  const id = Cookie.get("id");
   const navigate = useNavigate()
   const [edit, setEdit] = useState(false)
-  const [id, setId] = useState(0)
+  const [modal, setModal] = useState(false)
+  const [data, setData] = useState({
+    username: '',
+    email: '',
+    document: {
+      fullname: '',
+      gender: '',
+      nik: '',
+    }
+  })
   const pathname = location.pathname
-  const handleEdit = (elementId: number) => {
-    setEdit(true)
-    setId(elementId)
-  }
+
   const handleEditClose = () => {
     setEdit(false)
   }
@@ -26,11 +34,12 @@ const Profile = () => {
       username: '',
       email: '',
       fullname: '',
-      nik: '',
-      gender: 'L'
+      nik: [],
+      gender: 'L',
     },
+    validationSchema: validateProfile,
     onSubmit: (values) => {
-      axios.put(`https://api.flattenbot.site/users/update/${id}`, {
+      axios.put(`https://api.flattenbot.site/users/update`, {
         username: values.username,
         email: values.email,
         fullname: values.fullname,
@@ -44,9 +53,23 @@ const Profile = () => {
         console.log(response)
       }).catch((error) => {
         console.log(error.response.data)
+        toast.error(error.response.data.message)
       })
     }
   })
+
+  const getData = async () => {
+    try {
+      const response = await axios.get(`https://api.flattenbot.site/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setData(response.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleLogout = () => {
     Cookie.remove("token");
@@ -64,14 +87,46 @@ const Profile = () => {
     }
   }, [])
 
+  useEffect(() => {
+    getData()
+  }, [])
+
   return (
     <div className="h-screen w-full">
       <div className=' bg-primary h-60'>
         <div className='container mx-auto'>
-          <div className="w-full ">
+          <div className='flex px-5 justify-between items-center'>
             <div className="py-5 px-4 font-semibold text-white">
               Profile
             </div>
+            <div className='relative'>
+              <div onClick={() => setModal(true)} className='flex gap-2 cursor-pointer justify-center items-center px-4 h-10 text-secondary text-sm font-semibold bg-white rounded-md'>
+                <i className="fa-solid fa-sliders"></i>
+              </div>
+              {
+                modal && (
+                  <div className='absolute top-12 z-10 right-0 w-44 h-32 rounded-lg drop-shadow-lg bg-white'>
+                    <div className='flex w-full justify-end px-4 pt-6' >
+                      <i onClick={() => setModal(false)} className="fa-regular cursor-pointer fa-circle-xmark fa-lg"></i>
+                    </div>
+                    <div className='pt-4'>
+                      <hr />
+                    </div>
+                    <ul className="py-2 text-sm text-gray-700 font-semibold">
+                      <li onClick={() => { setEdit(true), setModal(false) }}>
+                        <div className="flex gap-4 px-4 py-2 hover:bg-gray-300 hover:text-white cursor-pointer"><i className="fa-solid fa-user-pen"></i>Edit Profile</div>
+                      </li>
+                      <li onClick={handleLogout}>
+                        <div className="flex gap-4 px-4 py-2 hover:bg-gray-300 hover:text-white cursor-pointer"><i className="fa-solid fa-right-from-bracket"></i>Log Out</div>
+                      </li>
+                    </ul>
+                  </div>
+                )
+              }
+            </div>
+
+          </div>
+          <div className="w-full">
             <div className="w-full flex justify-center">
               <div className="w-40 h-40 rounded-full bg-white">
                 <img src={profile} className='w-full h-full bg-cover rounded-full' alt="" />
@@ -80,24 +135,38 @@ const Profile = () => {
           </div>
           <div className='py-10 px-4 space-y-2'>
             <div>
+              <p className='text-secondary font-medium'>Username</p>
+              <div className='flex gap-4 py-4 items-center font-medium'>
+                <i className="fa-regular fa-circle-user"></i>
+                <p>{data.username}</p>
+              </div>
+            </div>
+            <div>
               <p className='text-secondary font-medium'>Nama Lengkap</p>
               <div className='flex gap-4 py-4 items-center font-medium'>
                 <i className="fa-regular fa-circle-user"></i>
-                <p>Udin Saputra</p>
+                <p>{data.document.fullname ? data.document.fullname : 'Belum isi Data'}</p>
               </div>
             </div>
             <div>
               <p className='text-secondary font-medium'>Email</p>
               <div className='flex gap-4 py-4 items-center font-medium'>
                 <i className="fa-regular fa-envelope"></i>
-                <p>email@email.com</p>
+                <p>{data.email}</p>
               </div>
             </div>
             <div>
               <p className='text-secondary font-medium'>NIK</p>
               <div className='flex gap-4 py-4 items-center font-medium'>
                 <i className="fa-regular fa-credit-card"></i>
-                <p>351202827380001</p>
+                <p>{data.document.nik}</p>
+              </div>
+            </div>
+            <div>
+              <p className='text-secondary font-medium'>Jenis Kelamin</p>
+              <div className='flex gap-4 py-4 items-center font-medium'>
+                <i className="fa-solid fa-venus-mars"></i>
+                <p>{data.document.gender ? data.document.gender : 'Belum isi Data'}</p>
               </div>
             </div>
             <div className='pt-10'>
@@ -114,7 +183,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
       {
         edit && (
           <Popup onConfirm={handleEditClose}>
@@ -126,25 +195,59 @@ const Profile = () => {
                   </div>
                   <form onSubmit={formik.handleSubmit} className="space-y-4" action="#">
                     <div>
-                      <Input label='Username' onChange={formik.handleChange} name='username' placeholder='Masukkan Username' star={true} />
+                      <Input
+                        label='Username'
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        name='username' placeholder='Masukkan Username' star={true} />
+                      {formik.touched.username && formik.errors.username ? (
+                        <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                          {formik.errors.username}
+                        </div>
+                      ) : null}
                     </div>
                     <div>
-                      <Input label='Nama Lengkap' onChange={formik.handleChange} name='fullname' placeholder='Masukkan Email' star={true} />
+                      <Input
+                        label='Nama Lengkap'
+                        onChange={formik.handleChange}
+                        name='fullname' placeholder='Masukkan Email' star={true} />
+                      {formik.touched.fullname && formik.errors.fullname ? (
+                        <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                          {formik.errors.fullname}
+                        </div>
+                      ) : null}
                     </div>
                     <div>
-                      <Input label='Email' onChange={formik.handleChange} name='email' placeholder='Masukkan Email' star={true} />
+                      <Input
+                        label='Email'
+                        onChange={formik.handleChange}
+                        name='email' placeholder='Masukkan Email' star={true} />
+                      {formik.touched.email && formik.errors.email ? (
+                        <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                          {formik.errors.email}
+                        </div>
+                      ) : null}
                     </div>
                     <div>
                       <label className='text-secondary'>Jenis Kelamin</label>
                       <select name="gender" className='select select-bordered w-full max-w-xs bg-white' onChange={formik.handleChange}>
-                        <option value={'L'}>Laki - Laki</option>
-                        <option value={'P'}>Perempuan</option>
+                        <option value={['male']}>Laki - Laki</option>
+                        <option value={['female']}>Perempuan</option>
                       </select>
                     </div>
                     <div>
-                      <Input label='Nik' onChange={formik.handleChange} placeholder='Masukkan Nik' name='nik' star={true} />
+                      <Input
+                        label='Nik'
+                        onChange={formik.handleChange}
+                        placeholder='Masukkan Nik'
+                        name='nik' star={true} />
+                      {formik.touched.nik && formik.errors.nik ? (
+                        <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                          {formik.errors.nik}
+                        </div>
+                      ) : null}
                     </div>
-                    <div className="py-2">
+                    <div className="py-2 flex justify-end">
                       <Button type='submit' label='Tambahkan' />
                     </div>
                   </form>
@@ -168,7 +271,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 

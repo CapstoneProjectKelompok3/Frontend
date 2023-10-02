@@ -47,7 +47,7 @@ const DataUser = () => {
     };
     const handleVerif = async () => {
         await axios
-            .put(`https://api.flattenbot.site/users/verify/${id}`,{}, {
+            .put(`https://api.flattenbot.site/users/verify/${id}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -142,7 +142,7 @@ const DataUser = () => {
                                                     : "User belum Verif"}
                                             </td>
                                             <td>
-                                                <div className="flex justify-center gap-7">
+                                                <div className="flex gap-7">
                                                     {element.is_activated === false ? (
                                                         <div
                                                             onClick={() => {
@@ -150,7 +150,7 @@ const DataUser = () => {
                                                             }}
                                                             className="cursor-pointer hover:text-primary"
                                                         >
-                                                            <i className="fa-solid fa-hourglass fa-lg"></i>
+                                                            <i className="fa-solid fa-circle-check"></i>
                                                         </div>
                                                     ) : null}
 
