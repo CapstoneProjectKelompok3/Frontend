@@ -12,7 +12,7 @@ export default {
         'secondary': '#696969',
         'background': '#FAFAFA',
         'line': '#E9E9E9',
-      }
+      },
     },
   },
   plugins: [require("daisyui")],

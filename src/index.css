@@ -65,3 +65,10 @@ button:focus-visible {
   background: linear-gradient(to top,#ecd2d2 50%, #e1bdbf 50%);
   filter: blur(100px);
 }
+
+.mapUser {
+  position: absolute;
+  top: 0;
+  height: 40px;
+  width: 100px;
+}

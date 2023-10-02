@@ -1,4 +1,34 @@
+import axios from 'axios'
+import Cookie from 'js-cookie'
+import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+
 const Navbar = () => {
+
+  const token = Cookie.get('token')
+  const id = Cookie.get('id')
+  const [data, setData] = useState<any>([])
+
+  const getUserById = () => {
+    axios.get(`https://api.flattenbot.site/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then((res) => {
+      setData(res?.data?.data)
+    })
+    .catch((err) => {
+      if (err.response?.data?.status_code === 404) {
+        toast.error('Data Tidak Ditemukan')
+      }
+    })
+  }
+
+  useEffect(() => {
+    getUserById()
+  }, [])
+
   return (
     <div className='ml-[20vw] bg-white w-[80vw] fixed h-20 flex justify-end px-10 items-center gap-x-4'>
       <div className='flex flex-row gap-x-2 items-center'>
