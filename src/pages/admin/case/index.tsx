@@ -19,30 +19,7 @@ const Case = () => {
                 <option>Han Solo</option>
                 <option>Greedo</option>
               </select>
-            </div> <thead>
-              <tr className="bg-primary border-none rounded-md text-white text-[16px]">
-                <th>No</th>
-                <th>Deskripsi Kasus</th>
-                <th>Masukan Kasus</th>
-                <th>Rating</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="bg-gray-300-200 border-none font-medium">
-                <td>
-                  <div>1</div>
-                </td>
-                <td>
-                  Kebakaran Persimpangan Tiga
-                </td>
-                <td>
-                  Sangat Baik !
-                </td>
-                <td>
-                  <i className="fa-solid fa-xl fa-star text-yellow-300" /> <span>5</span>
-                </td>
-              </tr>
-            </tbody>
+            </div>
           </div>
           <div className="overflow-x-auto border rounded-md">
             <table className="table">
