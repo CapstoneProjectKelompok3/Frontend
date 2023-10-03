@@ -22,6 +22,7 @@ interface Gooverment {
 const DataGoverment = () => {
     const [edit, setEdit] = useState(false)
     const [open, setOpen] = useState(false)
+    const [page, setPage] = useState(1);
     const [modalDelete, setModalDelete] = useState(false)
     const [id, setId] = useState(0)
     const [gooverment, setGooverment] = useState<Gooverment[]>([])
@@ -39,7 +40,7 @@ const DataGoverment = () => {
 
     const getDataGoverment = async () => {
         try {
-            const response = await axios.get(`https://belanjalagiyuk.shop/governments`, {
+            const response = await axios.get(`https://belanjalagiyuk.shop/governments?page=${page}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -86,12 +87,13 @@ const DataGoverment = () => {
                 setOpen(false)
                 getDataGoverment()
             }).catch((error) => {
-                console.log(error)
+                console.log(error.response)
                 toast.error(error.response.data.message)
             })
         }
     })
     const formikEdit = useFormik({
+        enableReinitialize: true,
         initialValues: {
             name: '',
             type: '',
@@ -193,6 +195,26 @@ const DataGoverment = () => {
                             </tbody>
                         </table>
                     </div>
+                    {gooverment && gooverment.length > 0 ? (
+                        <div className="flex justify-end pt-10">
+                            <div className="flex gap-5">
+                                <div>
+                                    <Button
+                                        disabled={page === 1}
+                                        className={`${page === 1
+                                            ? "cursor-not-allowed bg-secondary hover:bg-secondary hover:border-secondary"
+                                            : ""
+                                            }`}
+                                        onClick={() => setPage(page - 1)}
+                                        label="Previous"
+                                    />
+                                </div>
+                                <div>
+                                    <Button onClick={() => setPage(page + 1)} label="Next" />
+                                </div>
+                            </div>
+                        </div>
+                    ) : null}
                 </div>
                 {
                     open && (

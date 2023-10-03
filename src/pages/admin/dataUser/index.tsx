@@ -8,6 +8,8 @@ import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import Cookie from "js-cookie";
 import Popup from "../../../component/Popup";
+import { useFormik } from "formik";
+import { validateRegister } from "../../../validate/auth";
 interface Data {
     id: number;
     email: string;
@@ -20,12 +22,44 @@ const DataUser = () => {
     rootElement.style.backgroundColor = "#FAFAFA";
 
     const [openModal, setOpenModal] = useState(false);
+    const [add, setAdd] = useState(false);
     const [dataUser, setDataUser] = useState<Data[]>([]);
     const [page, setPage] = useState(1);
     const [modalVerif, setOpenModalverif] = useState(false);
     const [id, setId] = useState<number>(0);
     const token = Cookie.get("token");
     const navigate = useNavigate();
+
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            email: '',
+            nik: '',
+            password: 'password',
+            level: 'admin',
+        },
+        validationSchema: validateRegister,
+        onSubmit: (values) => {
+            axios.post(`https://api.flattenbot.site/users/register`, {
+                username: values.username,
+                email: values.email,
+                nik: values.nik,
+                password: values.password,
+                level: values.level,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then((response) => {
+                console.log(response)
+                toast.success(response.data.message)
+                setAdd(false)
+            }).catch((error) => {
+                console.log(error.response.data)
+                toast.error(error.response.data.message)
+            })
+        }
+    })
     const getDataUser = async () => {
         try {
             const response = await axios.get(
@@ -45,6 +79,7 @@ const DataUser = () => {
         setOpenModal(false);
         setOpenModalverif(false);
     };
+
     const handleVerif = async () => {
         await axios
             .put(`https://api.flattenbot.site/users/verify/${id}`, {}, {
@@ -69,7 +104,6 @@ const DataUser = () => {
     }, [page]);
 
     const handleDelete = () => {
-
         axios
             .delete(`https://api.flattenbot.site/users/${id}`, {
                 headers: {
@@ -85,6 +119,7 @@ const DataUser = () => {
                 console.log(error);
             });
     };
+
     useEffect(() => {
         if (!token) {
             navigate("/login");
@@ -109,6 +144,9 @@ const DataUser = () => {
                                     <i className="fa-solid text-secondary fa-magnifying-glass"></i>
                                 }
                             />
+                        </div>
+                        <div>
+                            <Button onClick={() => setAdd(true)} className="drop-shadow-xl" label='Tambah Admin' />
                         </div>
                     </div>
                     <div className="overflow-x-auto border rounded-md">
@@ -199,45 +237,111 @@ const DataUser = () => {
                         </div>
                     ) : null}
                 </div>
-                {openModal && (
-                    <Popup onConfirm={handleClose}>
-                        <div className="relative h-56 bg-white rounded-lg shadow">
-                            <div className="px-10 py-10 flex flex-col space-y-3 ">
-                                <div className="space-y-2 flex flex-col justify-center items-center">
-                                    <h3 className="text-xl text-center font-bold text-black">
-                                        Hapus Data
-                                    </h3>
-                                    <p className="text-md text-center">
-                                        Apakah Anda Yakin ingin Menghapus Data ini ?
-                                    </p>
+                {
+                    add && (
+                        <Popup onConfirm={() => setAdd(false)}>
+                            <div className="relative w-full max-w-md max-h-full">
+                                <div className="relative w-96 bg-white rounded-lg shadow">
+                                    <div className="px-6 py-6 lg:px-8">
+                                        <div className="mb-4 text-xl text-center font-bold text-black">
+                                            Tambah Admin
+                                        </div>
+                                        <form onSubmit={formik.handleSubmit} className="space-y-4" action="#">
+                                            <div>
+                                                <label className="block py-1 text-sm font-medium text-black">
+                                                    Username <span className='text-primary'>*</span>
+                                                </label>
+                                                <Input
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    name="username" placeholder="Masukkan Username" className="p-3 w-full" />
+                                                {formik.touched.username && formik.errors.username ? (
+                                                    <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                                                        {formik.errors.username}
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                            <div>
+                                                <label className="block py-1 text-sm font-medium text-black">
+                                                    email <span className='text-primary'>*</span>
+                                                </label>
+                                                <Input
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    name="email" placeholder="Masukkan Email" className="p-3 w-full" />
+                                                {formik.touched.email && formik.errors.email ? (
+                                                    <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                                                        {formik.errors.email}
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                            <div>
+                                                <label className="block py-1 text-sm font-medium text-black">
+                                                    NIK <span className='text-primary'>*</span>
+                                                </label>
+                                                <Input
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    name="nik" placeholder="Masukkan NIK" className="p-3 w-full" />
+                                                {formik.touched.nik && formik.errors.nik ? (
+                                                    <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                                                        {formik.errors.nik}
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                            <div className="py-2 flex justify-end">
+                                                <Button type="submit" label='Tambahkan' />
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="px-10 flex justify-end">
-                                <Button onClick={() => handleDelete()} label="Oke" />
-                            </div>
-                        </div>
-                    </Popup>
-                )}
-                {modalVerif && (
-                    <Popup onConfirm={handleClose}>
-                        <div className="relative h-56 bg-white rounded-lg shadow">
-                            <div className="px-10 py-10 flex flex-col space-y-3 ">
-                                <div className="space-y-2">
-                                    <h3 className="text-xl  font-bold text-black">
-                                        Verifikasi User
-                                    </h3>
-                                    <p className="text-md ">
-                                        Silakan verifikasi akun pengguna ini sebelum memberikan
-                                        akses penuh.
-                                    </p>
+                        </Popup>
+                    )
+                }
+                {
+                    openModal && (
+                        <Popup onConfirm={handleClose}>
+                            <div className="relative h-56 bg-white rounded-lg shadow">
+                                <div className="px-10 py-10 flex flex-col space-y-3 ">
+                                    <div className="space-y-2 flex flex-col justify-center items-center">
+                                        <h3 className="text-xl text-center font-bold text-black">
+                                            Hapus Data
+                                        </h3>
+                                        <p className="text-md text-center">
+                                            Apakah Anda Yakin ingin Menghapus Data ini ?
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="px-10 flex justify-end">
+                                    <Button onClick={() => handleDelete()} label="Oke" />
                                 </div>
                             </div>
-                            <div className="px-10 flex justify-end">
-                                <Button onClick={() => handleVerif()} label="Submit" />
+                        </Popup>
+                    )
+                }
+                {
+                    modalVerif && (
+                        <Popup onConfirm={handleClose}>
+                            <div className="relative h-56 bg-white rounded-lg shadow">
+                                <div className="px-10 py-10 flex flex-col space-y-3 ">
+                                    <div className="space-y-2">
+                                        <h3 className="text-xl  font-bold text-black">
+                                            Verifikasi User
+                                        </h3>
+                                        <p className="text-md ">
+                                            Silakan verifikasi akun pengguna ini sebelum memberikan
+                                            akses penuh.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="px-10 flex justify-end">
+                                    <Button onClick={() => handleVerif()} label="Submit" />
+                                </div>
                             </div>
-                        </div>
-                    </Popup>
-                )}
+                        </Popup>
+                    )
+                }
             </div>
         </section>
     );
