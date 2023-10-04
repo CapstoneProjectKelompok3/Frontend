@@ -26,9 +26,9 @@ const LoginPage = () => {
         .then((res) => {
           Cookie.set("token", res?.data?.data?.token);
           Cookie.set("role", res?.data?.data?.user?.level);
+          Cookie.set("id", res?.data?.data?.user?.id)
 
           const role = res?.data?.data?.user?.level;
-
           if (role === "superadmin" || role === "admin") {
             toast.success("Berhasil Login");
             setTimeout(() => {
@@ -75,11 +75,10 @@ const LoginPage = () => {
                 label="Email"
                 name="email"
                 type="email"
-                className={`w-full ${
-                  formik.touched.email && formik.errors.email
-                    ? ""
-                    : "mb-9 md:mb-4"
-                }`}
+                className={`w-full ${formik.touched.email && formik.errors.email
+                  ? ""
+                  : "mb-9 md:mb-4"
+                  }`}
                 icon={<i className="fa-solid fa-user"></i>}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}

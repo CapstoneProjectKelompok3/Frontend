@@ -17,6 +17,7 @@ import { Toaster } from "react-hot-toast";
 import DataGoverment from "./pages/admin/dataGoverment";
 import History from "./pages/user/history";
 import DashboardPetugas from "./pages/officer/dashboard";
+import DataUser from "./pages/admin/dataUser";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
 
         <Route element={<Dashboard />} path="/dashboard" />
         <Route element={<DataAdmin />} path="/data-admin" />
+        <Route element={<DataUser />} path="/data-user" />
         <Route element={<ChatService />} path="/chat-layanan" />
         <Route element={<DataOfficer />} path="/data-petugas" />
         <Route element={<DataGoverment />} path="/data-goverment" />

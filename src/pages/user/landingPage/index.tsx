@@ -1,15 +1,16 @@
 import sirine from '../../../assets/sirine.png'
 import Cookie from "js-cookie";
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 
 const LandingPage = () => {
   const token = Cookie.get("token");
   const navigate = useNavigate()
-  
+  const pathname = location.pathname;
+
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       navigate('/login')
       setTimeout(() => {
         toast.error("Silahkan Login Terlebih Dahulu")
@@ -43,10 +44,21 @@ const LandingPage = () => {
           </div>
         </div>
         <div className='flex justify-center font-semibold'>
-        Tekan Tombol untuk Meminta bantuan
+          Tekan Tombol untuk Meminta bantuan
         </div>
       </div>
-      <div className="circleBg absolute z-0 bottom-36 right-5 w-72 h-72 rounded-full">
+      <div className="fixed bottom-0 left-0 w-full h-[12vh] px-5 drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)] bg-white rounded-tl-xl rounded-tr-xl">
+        <div className="flex flex-row justify-between place-items-center h-full px-5">
+          <div onClick={() => navigate('/beranda')} className={`flex flex-col place-items-center ${pathname === '/beranda' ? 'text-black fa-lg' : 'text-secondary'} `}>
+            <i className="fa-solid fa-house"></i>
+          </div>
+          <div onClick={() => navigate('/riwayat')} className={`flex flex-col place-items-center ${pathname === '/riwayat' ? 'text-black fa-lg' : 'text-secondary'} `}>
+            <i className="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <div onClick={() => navigate('/profile')} className={`flex flex-col place-items-center ${pathname === '/profile' ? 'text-black fa-lg' : 'text-secondary'} `}>
+            <i className="fa-solid fa-user"></i>
+          </div>
+        </div>
       </div>
     </div>
   )
