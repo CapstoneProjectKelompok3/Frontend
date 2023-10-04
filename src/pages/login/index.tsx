@@ -26,6 +26,7 @@ const LoginPage = () => {
         .then((res) => {
           Cookie.set("token", res?.data?.data?.token);
           Cookie.set("role", res?.data?.data?.user?.level);
+          Cookie.set('uid', res?.data?.data?.user?.id)
 
           const role = res?.data?.data?.user?.level;
 
@@ -43,7 +44,11 @@ const LoginPage = () => {
         })
         .catch((err) => {
           if (err.response.data.status_code === 400) {
-            toast.error("Email atau password salah");
+            if (err.response.data.message === 'Pending Admin Approval.') {
+              toast.error('Menunggu Persetujuan Admin Terlebih Dahulu');
+            } else {
+              toast.error('Email atau Password yang di Masukkan Salah');
+            }
           } else {
             toast.error("Server tidak merespon. Mohon coba lagi nanti");
           }

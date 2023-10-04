@@ -8,14 +8,23 @@ const LandingPage = () => {
   const token = Cookie.get("token");
   const navigate = useNavigate()
   
-  useEffect(() => {
-    if(!token) {
-      navigate('/login')
-      setTimeout(() => {
-        toast.error("Silahkan Login Terlebih Dahulu")
-      }, 200);
-    }
-  }, [])
+  // useEffect(() => {
+  //   if(!token) {
+  //     navigate('/login')
+  //     setTimeout(() => {
+  //       toast.error("Silahkan Login Terlebih Dahulu")
+  //     }, 200);
+  //   }
+  // }, [])
+  const handleLokasi = () => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      localStorage.setItem('userLatitude', latitude)      
+      localStorage.setItem('userLongitude', longitude)      
+    });
+
+    navigate('/lokasi')
+  }
 
   return (
     <div className="h-screen w-full relative">
@@ -45,6 +54,7 @@ const LandingPage = () => {
         <div className='flex justify-center font-semibold'>
         Tekan Tombol untuk Meminta bantuan
         </div>
+        <button onClick={() => handleLokasi()}>Tekan</button>
       </div>
       <div className="circleBg absolute z-0 bottom-36 right-5 w-72 h-72 rounded-full">
       </div>
