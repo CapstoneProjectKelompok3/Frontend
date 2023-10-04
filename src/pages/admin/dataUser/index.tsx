@@ -129,6 +129,12 @@ const DataUser = () => {
         }
     }, []);
 
+    const role = Cookie.get('role')
+    useEffect(() => {
+        if (role === 'user') {
+            navigate('/beranda')
+        }
+    })
     return (
         <section>
             <Navbar />

@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import Input from "../../component/Input";
 import Button from "../../component/Button";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,12 +6,22 @@ import { useFormik } from "formik";
 import { validateRegister } from "../../validate/auth";
 import axios from "axios";
 import Cookie from "js-cookie";
-import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
-
+  const token = Cookie.get('token')
+  const role = Cookie.get('role')
+  useEffect(() => {
+    if (token) {
+      if (role === 'admin' || role === 'superadmin') {
+        navigate('/dashboard')
+      }
+      if (role === 'user') {
+        navigate('/beranda')
+      }
+    }
+  }, [])
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -71,10 +81,10 @@ const Register = () => {
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.username && formik.errors.username ? (
-                <div className="text-red-500 focus:outline-red-500 text-sm font-semibold">
-                  {formik.errors.username}
-                </div>
-              ) : null}
+                  <div className="text-red-500 focus:outline-red-500 text-sm font-semibold">
+                    {formik.errors.username}
+                  </div>
+                ) : null}
               </div>
               <div>
                 <Input
@@ -88,10 +98,10 @@ const Register = () => {
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.nik && formik.errors.nik ? (
-                <div className="text-red-500 focus:outline-red-500 text-sm font-semibold">
-                  {formik.errors.nik}
-                </div>
-              ) : null}
+                  <div className="text-red-500 focus:outline-red-500 text-sm font-semibold">
+                    {formik.errors.nik}
+                  </div>
+                ) : null}
               </div>
               <div>
                 <Input
@@ -105,10 +115,10 @@ const Register = () => {
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.email && formik.errors.email ? (
-                <div className="text-red-500 focus:outline-red-500 text-sm font-semibold">
-                  {formik.errors.email}
-                </div>
-              ) : null}
+                  <div className="text-red-500 focus:outline-red-500 text-sm font-semibold">
+                    {formik.errors.email}
+                  </div>
+                ) : null}
               </div>
               <div>
                 <Input
@@ -122,10 +132,10 @@ const Register = () => {
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.password && formik.errors.password ? (
-                <div className="text-red-500 focus:outline-red-500 text-sm font-semibold">
-                  {formik.errors.password}
-                </div>
-              ) : null}
+                  <div className="text-red-500 focus:outline-red-500 text-sm font-semibold">
+                    {formik.errors.password}
+                  </div>
+                ) : null}
               </div>
               <div>
                 <Button
@@ -135,12 +145,12 @@ const Register = () => {
                 />
               </div>
             </form>
-              <div className="text-center">
-                Sudah punya akun?{" "}
-                <Link to="/login" className="text-red-500 hover:text-red-700">
-                  Masuk Disini
-                </Link>
-              </div>
+            <div className="text-center">
+              Sudah punya akun?{" "}
+              <Link to="/login" className="text-red-500 hover:text-red-700">
+                Masuk Disini
+              </Link>
+            </div>
           </div>
         </div>
       </div>

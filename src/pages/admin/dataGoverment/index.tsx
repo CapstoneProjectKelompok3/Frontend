@@ -37,6 +37,14 @@ const DataGoverment = () => {
             }, 200);
         }
     }, [])
+    const role = Cookie.get('role')
+    useEffect(() => {
+        if (role === 'user') {
+            navigate('/beranda')
+        } else if (role === 'superadmin') {
+            navigate('/dashboard')
+        }
+    })
 
     const getDataGoverment = async () => {
         try {

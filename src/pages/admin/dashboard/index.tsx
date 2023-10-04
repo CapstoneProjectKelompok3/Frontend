@@ -15,16 +15,21 @@ const Dashboard = () => {
   const role = Cookie.get("role");
   const token = Cookie.get("token");
   const navigate = useNavigate()
-  
+
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       navigate('/login')
       setTimeout(() => {
         toast.error("Silahkan Login Terlebih Dahulu")
       }, 200);
     }
   }, [])
-  
+  useEffect(() => {
+    if (role === 'user') {
+      navigate('/beranda')
+    }
+  })
+
   const rootElement = document.documentElement;
   rootElement.style.backgroundColor = "#FAFAFA";
 

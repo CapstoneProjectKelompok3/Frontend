@@ -1,8 +1,19 @@
+import { useNavigate } from "react-router"
 import Input from "../../../component/Input"
 import Navbar from "../../../component/Navbar"
 import Sidebar from "../../../component/Sidebar"
-
+import Cookie from 'js-cookie'
+import { useEffect } from 'react'
 const Case = () => {
+  const navigate = useNavigate()
+  const role = Cookie.get('role')
+  useEffect(() => {
+    if (role === 'user') {
+      navigate('/beranda')
+    } else if (role === 'superadmin') {
+      navigate('/dashboard')
+    }
+  })
   return (
     <section>
       <Navbar />

@@ -27,10 +27,11 @@ const DragAndDropMarker = () => {
 function Map() {
   const [selected, setSelected] = useState<any>(null);
   const token = Cookie.get("token");
+  const role = Cookie.get("role");
   const navigate = useNavigate()
-  
+
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       navigate('/login')
       setTimeout(() => {
         toast.error("Silahkan Login Terlebih Dahulu")
@@ -38,6 +39,11 @@ function Map() {
     }
   }, [])
 
+  useEffect(() => {
+    if (role === 'admin' || role === 'superadmin') {
+      navigate('/dashboard')
+    }
+  })
   const center = useMemo(() => {
     if (selected) {
       return { lat: selected.lat, lng: selected.lng };
@@ -111,20 +117,20 @@ const SearchMap = ({ setSelected }) => {
   return (
     <>
       <div className="absolute top-1 z-10 bg-white px-2">
-      <Input
-        placeholder="Cari Alamat"
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        disabled={!ready}
-        className="w-[100vw] h-12"
-      />
-      {status === "OK" &&
-        data.map(({ place_id, description }) => (
-          <button className="w-full" key={place_id} onClick={() => handleSelect(description)}>
-            {description}
-          </button>
-        ))}
+        <Input
+          placeholder="Cari Alamat"
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          disabled={!ready}
+          className="w-[100vw] h-12"
+        />
+        {status === "OK" &&
+          data.map(({ place_id, description }) => (
+            <button className="w-full" key={place_id} onClick={() => handleSelect(description)}>
+              {description}
+            </button>
+          ))}
       </div>
     </>
   );
