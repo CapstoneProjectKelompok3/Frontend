@@ -65,9 +65,6 @@ const DataOfficer = () => {
   const handleClose = () => {
     setOpen(false)
   }
-  const handleEdit = () => {
-    setEdit(true)
-  }
   const handleEditClose = () => {
     setEdit(false)
   }

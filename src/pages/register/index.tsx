@@ -8,6 +8,12 @@ import axios from "axios";
 import Cookie from "js-cookie";
 import toast from "react-hot-toast";
 
+interface RegistrationFormData {
+  email: string;
+  username: string;
+  nik: string;
+  password: string;
+}
 const Register = () => {
   const navigate = useNavigate();
   const token = Cookie.get('token')
@@ -22,12 +28,12 @@ const Register = () => {
       }
     }
   }, [])
-  const formik = useFormik({
+  const formik = useFormik<RegistrationFormData>({
     initialValues: {
-      email: "",
-      username: "",
-      nik: "",
-      password: "",
+      email: '',
+      username: '',
+      nik: '',
+      password: '',
     },
     validationSchema: validateRegister,
     onSubmit: (values: any) => {
@@ -38,7 +44,7 @@ const Register = () => {
           nik: values.nik,
           password: values.password,
         })
-        .then((res) => {
+        .then(() => {
           toast.success('Daftar Akun Berhasil')
           navigate('/login')
         })

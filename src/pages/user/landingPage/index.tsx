@@ -47,11 +47,11 @@ const LandingPage = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          localStorage.setItem("userLatitude", latitude);
-          localStorage.setItem("userLongitude", longitude);
+          localStorage.setItem("userLatitude", latitude.toString());
+          localStorage.setItem("userLongitude", longitude.toString());
           navigate("/lokasi");
         },
-        (error) => {
+        () => {
           toast.error("Gagal mendapatkan lokasi");
         }
       );

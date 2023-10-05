@@ -14,7 +14,6 @@ const History = () => {
   const [openModal, setOpenModal] = useState(false)
   const [rating, setRating] = useState(0)
   const [content, setContent] = useState('')
-  const [emergencies, setEmergencies] = useState(0)
   const pathname = location.pathname;
 
   const handleClose = () => {
