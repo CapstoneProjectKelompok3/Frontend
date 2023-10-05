@@ -14,15 +14,21 @@ const DataAdmin = () => {
   const [edit, setEdit] = useState(false)
   const token = Cookie.get("token");
   const navigate = useNavigate()
-  
+
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       navigate('/login')
       setTimeout(() => {
         toast.error("Silahkan Login Terlebih Dahulu")
       }, 200);
     }
   }, [])
+  const role = Cookie.get('role')
+  useEffect(() => {
+    if (role === 'user') {
+      navigate('/beranda')
+    }
+  })
 
   const handleclick = () => {
     setOpen(true)

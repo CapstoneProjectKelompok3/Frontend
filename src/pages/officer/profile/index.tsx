@@ -11,7 +11,7 @@ import Button from '../../../component/Button';
 import { validateProfile } from '../../../validate/auth';
 const Profile = () => {
   const token = Cookie.get("token");
-  const id = Cookie.get("id");
+  const id = Cookie.get("uid");
   const navigate = useNavigate()
   const [edit, setEdit] = useState(false)
   const [modal, setModal] = useState(false)
@@ -74,6 +74,8 @@ const Profile = () => {
   const handleLogout = () => {
     Cookie.remove("token");
     Cookie.remove("role");
+    Cookie.remove("uid");
+    Cookie.remove("roomid");
 
     navigate("/login");
     toast.success("Berhasil Logout");
@@ -86,10 +88,10 @@ const Profile = () => {
       }, 200);
     }
   }, [])
-
   useEffect(() => {
     getData()
   }, [])
+
 
   return (
     <div className="h-screen w-full">
@@ -99,27 +101,30 @@ const Profile = () => {
             <div className="py-5 px-4 font-semibold text-white">
               Profile
             </div>
-            <div className='relative'>
+            <div>
               <div onClick={() => setModal(true)} className='flex gap-2 cursor-pointer justify-center items-center px-4 h-10 text-secondary text-sm font-semibold bg-white rounded-md'>
                 <i className="fa-solid fa-sliders"></i>
               </div>
               {
                 modal && (
-                  <div className='absolute top-12 z-10 right-0 w-44 h-32 rounded-lg drop-shadow-lg bg-white'>
+                  <div className='absolute top-0 z-10 right-0 w-screen md:w-96 lg:md:w-96 h-screen drop-shadow-lg bg-white'>
                     <div className='flex w-full justify-end px-4 pt-6' >
                       <i onClick={() => setModal(false)} className="fa-regular cursor-pointer fa-circle-xmark fa-lg"></i>
                     </div>
                     <div className='pt-4'>
                       <hr />
                     </div>
-                    <ul className="py-2 text-sm text-gray-700 font-semibold">
-                      <li onClick={() => { setEdit(true), setModal(false) }}>
-                        <div className="flex gap-4 px-4 py-2 hover:bg-gray-300 hover:text-white cursor-pointer"><i className="fa-solid fa-user-pen"></i>Edit Profile</div>
-                      </li>
-                      <li onClick={handleLogout}>
-                        <div className="flex gap-4 px-4 py-2 hover:bg-gray-300 hover:text-white cursor-pointer"><i className="fa-solid fa-right-from-bracket"></i>Log Out</div>
-                      </li>
-                    </ul>
+                    <div className='p-5 '>
+                      <ul className="py-2 space-y-3 text-sm text-gray-700 font-semibold">
+                        <li onClick={() => { setEdit(true), setModal(false) }}>
+                          <div className="flex gap-4 px-4 py-2 hover:bg-gray-300 hover:text-white cursor-pointer"><i className="fa-solid fa-user-pen"></i>Edit Profile</div>
+                        </li>
+                        <li onClick={handleLogout}>
+                          <div className="flex gap-4 px-4 py-2 hover:bg-gray-300 hover:text-white cursor-pointer"><i className="fa-solid fa-right-from-bracket"></i>Log Out</div>
+                        </li>
+                      </ul>
+                    </div>
+
                   </div>
                 )
               }
@@ -168,18 +173,6 @@ const Profile = () => {
                 <i className="fa-solid fa-venus-mars"></i>
                 <p>{data.document.gender ? data.document.gender : 'Belum isi Data'}</p>
               </div>
-            </div>
-            <div className='pt-10'>
-              <ul className="list-none">
-                <div onClick={() => handleLogout()}>
-                  <li className="flex flex-row gap-x-4 align-middle rounded-md py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold">
-                    <div>
-                      <i className="fa-solid fa-right-from-bracket"></i>
-                    </div>
-                    <div>Logout</div>
-                  </li>
-                </div>
-              </ul>
             </div>
           </div>
         </div>

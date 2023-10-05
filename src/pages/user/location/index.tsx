@@ -1,8 +1,4 @@
-import {
-  GoogleMap,
-  MarkerF,
-  useLoadScript,
-} from "@react-google-maps/api";
+import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 import Cookie from "js-cookie";
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router";
@@ -24,6 +20,7 @@ function Map() {
   const navigate = useNavigate();
   const latitude = parseFloat(localStorage.getItem("userLatitude"));
   const longitude = parseFloat(localStorage.getItem("userLongitude"));
+  const role = Cookie.get("role");
 
   // useEffect(() => {
   //   if(!token) {
@@ -34,6 +31,20 @@ function Map() {
   //   }
   // }, [])
 
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+      setTimeout(() => {
+        toast.error("Silahkan Login Terlebih Dahulu");
+      }, 200);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (role === "admin" || role === "superadmin") {
+      navigate("/dashboard");
+    }
+  });
   const center = useMemo(() => {
     if (selected) {
       return { lat: selected.lat, lng: selected.lng };
@@ -61,16 +72,13 @@ function Map() {
         onClick={handleMapClick}
       >
         {selected ? (
+          <MarkerF position={selected} draggable={true} />
+        ) : (
           <MarkerF
-            position={selected}
+            position={{ lat: latitude, lng: longitude }}
             draggable={true}
           />
-        ) : 
-          <MarkerF
-          position={{ lat: latitude, lng: longitude }}
-          draggable={true}
-      />
-        }
+        )}
       </GoogleMap>
     </div>
   );

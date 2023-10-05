@@ -35,8 +35,11 @@ const DataGoverment = () => {
   const [id, setId] = useState(0);
   const [gooverment, setGooverment] = useState<Gooverment[]>([]);
   const [address, setAddress] = useState<string>("Jl");
-  const gmapsApi  = "AIzaSyBlU8Tj6O7eJD-49jUXxLQNIC6pyKzInFY"
+  const gmapsApi = "AIzaSyBlU8Tj6O7eJD-49jUXxLQNIC6pyKzInFY";
   const [selected, setSelected] = useState<any>({ lat: -6.2, lng: 106.816666 });
+  const navigate = useNavigate();
+  const token = Cookie.get("token");
+  const role = Cookie.get("role");
 
   const center = useMemo(() => {
     if (selected) {
@@ -45,6 +48,23 @@ const DataGoverment = () => {
       return { lat: -6.2, lng: 106.816666 };
     }
   }, [selected]);
+  
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+      setTimeout(() => {
+        toast.error("Silahkan Login Terlebih Dahulu");
+      }, 200);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (role === "user") {
+      navigate("/beranda");
+    } else if (role === "superadmin") {
+      navigate("/dashboard");
+    }
+  });
 
   const handleMapClick = async (e) => {
     const lat = e.latLng.lat();
@@ -58,23 +78,20 @@ const DataGoverment = () => {
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${gmapsApi}`
       );
 
-      if (response.data.status === 'OK' && response.data.results.length > 0) {
+      if (response.data.status === "OK" && response.data.results.length > 0) {
         const formattedAddress = response.data.results[0].formatted_address;
-        setAddress(formattedAddress)
+        setAddress(formattedAddress);
       } else {
-        toast.error('Alamat Tidak ditemukan')
+        toast.error("Alamat Tidak ditemukan");
       }
-    } catch(err) {
-      toast.error('Gagal mengambil alamat')
+    } catch (err) {
+      toast.error("Gagal mengambil alamat");
     }
-  }
+  };
 
   useEffect(() => {
-    getAddress(selected.lat, selected.lng)
-  }, [selected])
-
-  const token = Cookie.get("token");
-  const navigate = useNavigate();
+    getAddress(selected.lat, selected.lng);
+  }, [selected]);
 
   useEffect(() => {
     if (!token) {
@@ -123,8 +140,8 @@ const DataGoverment = () => {
       type: "rumah sakit",
       jumlah_unit: 0,
       address: address,
-      latitude: '',
-      longitude: '',
+      latitude: "",
+      longitude: "",
     },
     validationSchema: validateGooverment,
     onSubmit: (values) => {
@@ -354,7 +371,8 @@ const DataGoverment = () => {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         />
-                        {formik.touched.jumlah_unit && formik.errors.jumlah_unit ? (
+                        {formik.touched.jumlah_unit &&
+                        formik.errors.jumlah_unit ? (
                           <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
                             {formik.errors.jumlah_unit}
                           </div>

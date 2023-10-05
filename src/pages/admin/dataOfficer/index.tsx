@@ -15,15 +15,24 @@ const DataOfficer = () => {
   const [edit, setEdit] = useState(false)
   const token = Cookie.get("token");
   const navigate = useNavigate()
-  
+
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       navigate('/login')
       setTimeout(() => {
         toast.error("Silahkan Login Terlebih Dahulu")
       }, 200);
     }
   }, [])
+
+  const role = Cookie.get('role')
+  useEffect(() => {
+    if (role === 'user') {
+      navigate('/beranda')
+    } else if (role === 'superadmin') {
+      navigate('/dashboard')
+    }
+  })
 
   const handleclick = () => {
     setOpen(true)
@@ -37,7 +46,7 @@ const DataOfficer = () => {
   const handleEditClose = () => {
     setEdit(false)
   }
-  
+
   return (
     <section>
       <Navbar />
@@ -103,13 +112,13 @@ const DataOfficer = () => {
                     </div>
                     <form className="space-y-4" action="#">
                       <div>
-                        <Input label='Nama' placeholder='Masukkan Nama' star={true}/>
+                        <Input label='Nama' placeholder='Masukkan Nama' star={true} />
                       </div>
                       <div>
-                        <Input label='Email' placeholder='Masukkan Email' star={true}/>
+                        <Input label='Email' placeholder='Masukkan Email' star={true} />
                       </div>
                       <div>
-                        <Input label='Nik' placeholder='Masukkan Nik' star={true}/>
+                        <Input label='Nik' placeholder='Masukkan Nik' star={true} />
                       </div>
                       <div className="py-2">
                         <Button onClick={handleclick} label='Tambahkan' />
@@ -131,14 +140,14 @@ const DataOfficer = () => {
                       Edit Petugas
                     </div>
                     <form className="space-y-4" action="#">
-                    <div>
-                        <Input label='Nama' placeholder='Masukkan Nama' star={true}/>
+                      <div>
+                        <Input label='Nama' placeholder='Masukkan Nama' star={true} />
                       </div>
                       <div>
-                        <Input label='Email' placeholder='Masukkan Email' star={true}/>
+                        <Input label='Email' placeholder='Masukkan Email' star={true} />
                       </div>
                       <div>
-                        <Input label='Nik' placeholder='Masukkan Nik' star={true}/>
+                        <Input label='Nik' placeholder='Masukkan Nik' star={true} />
                       </div>
                       <div className="py-2">
                         <Button onClick={handleclick} label='Tambahkan' />

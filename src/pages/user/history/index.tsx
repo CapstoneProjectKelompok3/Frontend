@@ -4,12 +4,17 @@ import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import Popup from "../../../component/Popup";
 import Button from "../../../component/Button";
+import axios from "axios";
 
 const History = () => {
   const token = Cookie.get("token");
+  const role = Cookie.get("role");
+
   const navigate = useNavigate()
   const [openModal, setOpenModal] = useState(false)
   const [rating, setRating] = useState(0)
+  const [content, setContent] = useState('')
+  const [emergencies, setEmergencies] = useState(0)
   const pathname = location.pathname;
 
   const handleClose = () => {
@@ -25,6 +30,30 @@ const History = () => {
       }, 200);
     }
   }, [])
+
+  const idUser = Cookie.get('id')
+  const handleFeedback = () => {
+    axios.post(`https://api.flattenbot.site/feedback/${idUser}`, {
+      content: content,
+      rating: rating,
+      emergencies_id: 2
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then((response) => {
+      console.log(response)
+      // toast.success(response.data.message)
+    }).catch((error) => {
+      console.log(error.response.data)
+    })
+  }
+
+  useEffect(() => {
+    if (role === 'admin' || role === 'superadmin') {
+      navigate('/dashboard')
+    }
+  })
   const handleClick = (value: number) => {
     setRating(value)
   }
@@ -83,7 +112,7 @@ const History = () => {
                       Deskripsi
                     </label>
                     <div>
-                      <textarea name="" className='textarea w-full bg-white textarea-bordered' >
+                      <textarea name="" onChange={(e) => setContent(e.target.value)} className='textarea w-full bg-white textarea-bordered' >
                       </textarea>
                     </div>
                   </div>
@@ -104,13 +133,13 @@ const History = () => {
                 </div>
               </div>
               <div className="px-10 py-5 flex justify-end">
-                <Button label='Submit' />
+                <Button onClick={handleFeedback} label='Submit' />
               </div>
             </div>
           </Popup>
         )
       }
-       <div className="fixed bottom-0 left-0 w-full h-[12vh] px-5 drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)] bg-white rounded-tl-xl rounded-tr-xl">
+      <div className="fixed bottom-0 left-0 w-full h-[12vh] px-5 drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)] bg-white rounded-tl-xl rounded-tr-xl">
         <div className="flex flex-row justify-between place-items-center h-full px-5">
           <div onClick={() => navigate('/beranda')} className={`flex flex-col place-items-center ${pathname === '/beranda' ? 'text-black fa-lg' : 'text-secondary'} `}>
             <i className="fa-solid fa-house"></i>
@@ -118,7 +147,7 @@ const History = () => {
           <div onClick={() => navigate('/riwayat')} className={`flex flex-col place-items-center ${pathname === '/riwayat' ? 'text-black fa-lg' : 'text-secondary'} `}>
             <i className="fa-solid fa-clock-rotate-left"></i>
           </div>
-          <div  onClick={() => navigate('/profile')} className={`flex flex-col place-items-center ${pathname === '/profile' ? 'text-black fa-lg' : 'text-secondary'} `}>
+          <div onClick={() => navigate('/profile')} className={`flex flex-col place-items-center ${pathname === '/profile' ? 'text-black fa-lg' : 'text-secondary'} `}>
             <i className="fa-solid fa-user"></i>
           </div>
         </div>

@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 const ChatService = () => {
   const [selectedPerson, setSelectedPerson] = useState<any>(1);
-  
+
   let [police, setPolice] = useState<number>(0);
   let [damkar, setDamkar] = useState<number>(0);
   let [ambulance, setAmbulance] = useState<number>(0);
@@ -23,22 +23,30 @@ const ChatService = () => {
   const [checkedSar, setCheckedSar] = useState<boolean>(false);
   const [checkedDishub, setCheckedDishub] = useState<boolean>(false);
 
-  const handleSend = () => {};
+  const handleSend = () => { };
   const [showAttachOptions, setShowAttachOptions] = useState(false);
   const toggleAttachOptions = () => {
     setShowAttachOptions(!showAttachOptions);
   };
   const token = Cookie.get("token");
   const navigate = useNavigate()
-  
+
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       navigate('/login')
       setTimeout(() => {
         toast.error("Silahkan Login Terlebih Dahulu")
       }, 200);
     }
   }, [])
+  const role = Cookie.get('role')
+  useEffect(() => {
+    if (role === 'user') {
+      navigate('/beranda')
+    } else if (role === 'superadmin') {
+      navigate('/dashboard')
+    }
+  })
 
   const increase = (num: number) => {
     switch (num) {
@@ -362,7 +370,7 @@ const ChatService = () => {
                     <textarea className="textarea textarea-bordered bg-transparent" placeholder="Bio"></textarea>
                   </div>
                   <div>
-                    <Button label="Kerahkan" className="w-full"/>
+                    <Button label="Kerahkan" className="w-full" />
                   </div>
                 </div>
               )}
