@@ -7,12 +7,21 @@ import Cookie from "js-cookie";
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import axios from 'axios';
 
+interface Driver {
+  driving_status: string
+  fullname: string
+  email: string
+  goverment_type: string
+  status: boolean
+}
 const DataOfficer = () => {
   const rootElement = document.documentElement;
   rootElement.style.backgroundColor = "#FAFAFA";
   const [open, setOpen] = useState(false)
   const [edit, setEdit] = useState(false)
+  const [driver, setDriver] = useState<Driver[]>([])
   const token = Cookie.get("token");
   const navigate = useNavigate()
 
@@ -34,6 +43,22 @@ const DataOfficer = () => {
     }
   })
 
+  useEffect(() => {
+    getAllDriver()
+  }, [])
+
+  const getAllDriver = async () => {
+    try {
+      const response = await axios.get(`https://belanjalagiyuk.shop/drivers`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setDriver(response.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const handleclick = () => {
     setOpen(true)
   }
@@ -68,35 +93,58 @@ const DataOfficer = () => {
                   <th>No</th>
                   <th>Nama</th>
                   <th>Email</th>
-                  <th>NIK</th>
+                  <th>Type</th>
+                  <th>Driving Status</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-gray-300-200 items-center border-none font-medium">
-                  <td>
-                    <div>1</div>
-                  </td>
-                  <td>
-                    Petugas 1
-                  </td>
-                  <td>
-                    email@email.com
-                  </td>
-                  <td>
-                    351220009883777
-                  </td>
-                  <td>
-                    <div className='flex gap-7'>
-                      <div onClick={handleEdit} className='cursor-pointer hover:text-primary'>
-                        <i className="fa-solid fa-pen-to-square text-md"></i>
-                      </div>
-                      <div className='cursor-pointer hover:text-primary'>
-                        <i className="fa-solid fa-trash text-md"></i>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
+                {
+                  driver && driver.length > 0 ? (
+                    driver.map((element, index) => {
+                      return (
+                        <tr key={index} className="bg-gray-300-200 items-center border-none font-medium">
+                          <td>
+                            <div>{index + 1}</div>
+                          </td>
+                          <td>
+                            {element.fullname}
+                          </td>
+                          <td>
+                            {element.email}
+                          </td>
+                          <td>
+                            {element.goverment_type}
+                          </td>
+                          <td>
+                            {element.driving_status}
+                          </td>
+                          <td>
+                            {element.status === true ? 'Aktif' : 'Belum Aktif'}
+                          </td>
+                          <td>
+                            <div className='flex gap-7'>
+                              <div className='cursor-pointer hover:text-primary'>
+                                <i className="fa-solid fa-trash text-md"></i>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className="text-center font-semibold w-full"
+                      >
+                        Tidak Ada Data
+                      </td>
+                    </tr>
+                  )
+                }
+
               </tbody>
             </table>
           </div>

@@ -48,7 +48,7 @@ const DataGoverment = () => {
       return { lat: -6.2, lng: 106.816666 };
     }
   }, [selected]);
-  
+
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -66,6 +66,9 @@ const DataGoverment = () => {
     }
   });
 
+  useEffect(() => {
+    getDataGoverment()
+  }, [])
   const handleMapClick = async (e) => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
@@ -105,7 +108,7 @@ const DataGoverment = () => {
   const getDataGoverment = async () => {
     try {
       const response = await axios.get(
-        `https://belanjalagiyuk.shop/governments?page=${page}`,
+        `https://belanjalagiyuk.shop/governments`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -372,7 +375,7 @@ const DataGoverment = () => {
                           onBlur={formik.handleBlur}
                         />
                         {formik.touched.jumlah_unit &&
-                        formik.errors.jumlah_unit ? (
+                          formik.errors.jumlah_unit ? (
                           <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
                             {formik.errors.jumlah_unit}
                           </div>
@@ -483,9 +486,8 @@ const SearchMap = ({ setSelected }) => {
           className="w-52 h-8 bg-white mx-auto text-sm"
         />
         <div
-          className={`overflow-y-auto h-36 rounded-md mt-2 ${
-            value === "" || selectLocation === true ? "hidden" : ""
-          }`}
+          className={`overflow-y-auto h-36 rounded-md mt-2 ${value === "" || selectLocation === true ? "hidden" : ""
+            }`}
         >
           {status === "OK" &&
             data.map(({ place_id, description }) => (

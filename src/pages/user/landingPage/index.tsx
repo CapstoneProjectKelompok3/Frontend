@@ -3,7 +3,6 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import sirine from "../../../assets/sirine.png";
-import cancel from "../../../assets/cancel.svg";
 import Cookie from "js-cookie";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -112,25 +111,22 @@ const LandingPage = () => {
         <div className="flex flex-row justify-between place-items-center h-full px-5">
           <div
             onClick={() => navigate("/beranda")}
-            className={`flex flex-col place-items-center ${
-              pathname === "/beranda" ? "text-black fa-lg" : "text-secondary"
-            } `}
+            className={`flex flex-col place-items-center ${pathname === "/beranda" ? "text-black fa-lg" : "text-secondary"
+              } `}
           >
             <i className="fa-solid fa-house"></i>
           </div>
           <div
             onClick={() => navigate("/riwayat")}
-            className={`flex flex-col place-items-center ${
-              pathname === "/riwayat" ? "text-black fa-lg" : "text-secondary"
-            } `}
+            className={`flex flex-col place-items-center ${pathname === "/riwayat" ? "text-black fa-lg" : "text-secondary"
+              } `}
           >
             <i className="fa-solid fa-clock-rotate-left"></i>
           </div>
           <div
             onClick={() => navigate("/profile")}
-            className={`flex flex-col place-items-center ${
-              pathname === "/profile" ? "text-black fa-lg" : "text-secondary"
-            } `}
+            className={`flex flex-col place-items-center ${pathname === "/profile" ? "text-black fa-lg" : "text-secondary"
+              } `}
           >
             <i className="fa-solid fa-user"></i>
           </div>

@@ -18,13 +18,18 @@ import DataGoverment from "./pages/admin/dataGoverment";
 import History from "./pages/user/history";
 import DashboardPetugas from "./pages/officer/dashboard";
 import DataUser from "./pages/admin/dataUser";
+import Forgot from "./pages/forgot";
+import Verify from "./pages/verify";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route index element={<LoginPage />} />
         <Route element={<LoginPage />} path="/login" />
         <Route element={<Register />} path="/register" />
+        <Route element={<Forgot />} path="/forgot-password" />
+        <Route element={<Verify />} path="/verify-email/:id" />
 
         <Route element={<Dashboard />} path="/dashboard" />
         <Route element={<DataAdmin />} path="/data-admin" />
