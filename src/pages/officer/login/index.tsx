@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Input from "../../component/Input";
 import Button from "../../component/Button";
 import { Link, useNavigate } from "react-router-dom";
@@ -54,18 +54,6 @@ const LoginPage = () => {
         });
     },
   });
-  const token = Cookie.get('token')
-  const role = Cookie.get('role')
-  useEffect(() => {
-    if (token) {
-      if (role === 'admin' || role === 'superadmin') {
-        navigate('/dashboard')
-      }
-      if (role === 'user') {
-        navigate('/beranda')
-      }
-    }
-  }, [])
 
   return (
     <section className="flex flex-row h-screen">

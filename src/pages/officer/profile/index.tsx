@@ -11,7 +11,7 @@ import Button from '../../../component/Button';
 import { validateProfile } from '../../../validate/auth';
 const Profile = () => {
   const token = Cookie.get("token");
-  const id = Cookie.get("id");
+  const id = Cookie.get("uid");
   const navigate = useNavigate()
   const [edit, setEdit] = useState(false)
   const [modal, setModal] = useState(false)
@@ -74,7 +74,7 @@ const Profile = () => {
   const handleLogout = () => {
     Cookie.remove("token");
     Cookie.remove("role");
-    Cookie.remove("id");
+    Cookie.remove("uid");
     Cookie.remove("roomid");
 
     navigate("/login");
