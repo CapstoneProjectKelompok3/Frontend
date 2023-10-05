@@ -10,6 +10,8 @@ const Sidebar = () => {
   const handleLogout = () => {
     Cookie.remove("token");
     Cookie.remove("role");
+    Cookie.remove("id");
+    Cookie.remove("roomid");
 
     navigate("/login");
     toast.success("Berhasil Logout");

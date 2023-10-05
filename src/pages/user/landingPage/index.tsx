@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 const LandingPage = () => {
   const token = Cookie.get("token");
+  const role = Cookie.get("role");
   const navigate = useNavigate()
   const pathname = location.pathname;
 
@@ -17,6 +18,12 @@ const LandingPage = () => {
       }, 200);
     }
   }, [])
+
+  useEffect(() => {
+    if (role === 'admin' || role === 'superadmin') {
+      navigate('/dashboard')
+    }
+  })
 
   return (
     <div className="h-screen w-full relative">

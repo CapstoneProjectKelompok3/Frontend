@@ -1,21 +1,28 @@
 import Button from "../../../component/Button"
 import Cookie from "js-cookie";
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 
 const Message = () => {
   const token = Cookie.get("token");
+  const role = Cookie.get('role')
   const navigate = useNavigate()
-  
+
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       navigate('/login')
       setTimeout(() => {
         toast.error("Silahkan Login Terlebih Dahulu")
       }, 200);
     }
+
   }, [])
+  useEffect(() => {
+    if (role === 'admin' || role === 'superadmin') {
+      navigate('/dashboard')
+    }
+  })
 
   return (
     <div className="h-screen w-full">
