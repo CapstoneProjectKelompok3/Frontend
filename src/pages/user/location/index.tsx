@@ -2,13 +2,7 @@ import {
   GoogleMap,
   MarkerF,
   useLoadScript,
-  InfoWindow,
 } from "@react-google-maps/api";
-import usePlacesAutocomplete, {
-  getGeocode,
-  getLatLng,
-} from "use-places-autocomplete";
-import Input from "../../../component/Input";
 import Cookie from "js-cookie";
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router";

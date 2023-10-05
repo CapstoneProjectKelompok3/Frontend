@@ -25,9 +25,8 @@ const Sidebar = () => {
         <ul className="list-none px-3 mt-4">
           <Link to="/dashboard">
             <li
-              className={`${
-                pathname === "/dashboard" ? "bg-primary text-white font-semibold" : ""
-              } flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
+              className={`${pathname === "/dashboard" ? "bg-primary text-white font-semibold" : ""
+                } flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
             >
               <div>
                 <i className="fa-solid fa-house"></i>
@@ -36,26 +35,27 @@ const Sidebar = () => {
             </li>
           </Link>
           {role === "superadmin" ? (
-            <Link to="/data-admin">
-              <li
-                className={`${
-                  pathname === "/data-admin" ? "bg-primary text-white font-semibold" : ""
-                } flex flex-row gap-x-4 align-middle rounded-md px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
-              >
-                <div>
-                  <i className="fa-solid fa-user"></i>
-                </div>
-                <div>Data Admin</div>
-              </li>
-            </Link>
+            <div>
+              <Link to='/data-user'>
+                <li
+                  className={`${pathname === "/data-user" ? "bg-primary text-white font-semibold" : ""
+                    } flex flex-row gap-x-4 align-middle rounded-md px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
+                >
+                  <div>
+                    <i className="fa-solid fa-users"></i>
+                  </div>
+                  <div>Data Admin</div>
+                </li>
+              </Link>
+            </div>
+
           ) : null}
           {role === "admin" ? (
             <>
               <Link to="/data-goverment">
                 <li
-                  className={`${
-                    pathname === "/data-goverment" ? "bg-primary text-white font-semibold" : ""
-                  } flex flex-row gap-x-4 align-middle rounded-md px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
+                  className={`${pathname === "/data-goverment" ? "bg-primary text-white font-semibold" : ""
+                    } flex flex-row gap-x-4 align-middle rounded-md px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
                 >
                   <div>
                     <i className="fa-regular fa-building"></i>
@@ -63,11 +63,21 @@ const Sidebar = () => {
                   <div>Data Goverment</div>
                 </li>
               </Link>
+              <Link to='/data-user'>
+                <li
+                  className={`${pathname === "/data-user" ? "bg-primary text-white font-semibold" : ""
+                    } flex flex-row gap-x-4 align-middle rounded-md px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
+                >
+                  <div>
+                    <i className="fa-solid fa-users"></i>
+                  </div>
+                  <div>Data User</div>
+                </li>
+              </Link>
               <Link to="/chat-layanan">
                 <li
-                  className={`${
-                    pathname === "/chat-layanan" ? "bg-primary text-white font-semibold" : ""
-                  } flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
+                  className={`${pathname === "/chat-layanan" ? "bg-primary text-white font-semibold" : ""
+                    } flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
                 >
                   <div>
                     <i className="fa-solid fa-headset"></i>
@@ -77,9 +87,8 @@ const Sidebar = () => {
               </Link>
               <Link to="/kasus">
                 <li
-                  className={`${
-                    pathname === "/kasus" ? "bg-primary text-white font-semibold" : ""
-                  } flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
+                  className={`${pathname === "/kasus" ? "bg-primary text-white font-semibold" : ""
+                    } flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
                 >
                   <div>
                     <i className="fa-solid fa-copy"></i>
@@ -88,9 +97,8 @@ const Sidebar = () => {
                 </li>
               </Link>
               <Link to="/data-petugas">
-                <li className={`${
-                pathname === "/data-petugas" ? "bg-primary text-white font-semibold" : ""
-              } flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}>
+                <li className={`${pathname === "/data-petugas" ? "bg-primary text-white font-semibold" : ""
+                  } flex flex-row gap-x-4 align-middle rounded-md  px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}>
                   <div>
                     <i className="fa-solid fa-users"></i>
                   </div>
