@@ -49,3 +49,12 @@ export const validateRegister = yup.object({
   password: yup.string().min(5, 'Password Minimal 5 Karakter').required("Anda Harus Memasukkan Password"),
   nik: yup.string().min(16, 'Mnimal 16 angka').required("Anda Harus Memasukkan NIK"),
 });
+
+export const validateForgot = yup.object({
+  email: yup.string().required("Anda Harus Memasukkan Email")
+})
+export const validateReset = yup.object({
+  currentPass: yup.string().required("Anda Harus Memasukkan Password Sekarang"),
+  newPass: yup.string().required("Anda Harus Memasukkan Password Baru"),
+  repeatPass: yup.string().required("Ulangi Password Baru")
+})

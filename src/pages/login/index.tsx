@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Input from "../../component/Input";
 import Button from "../../component/Button";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,8 +13,8 @@ const LoginPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
     validationSchema: validateLogin,
     onSubmit: (values: any) => {
@@ -121,6 +121,11 @@ const LoginPage = () => {
                   {formik.errors.password}
                 </div>
               ) : null}
+              <div className="text-end py-2">
+                <Link to="/forgot-password" className="text-red-500 hover:text-red-700">
+                  Lupa Kata Sandi?
+                </Link>
+              </div>
             </div>
             <div>
               <Button
@@ -136,6 +141,7 @@ const LoginPage = () => {
               Daftar Disini
             </Link>
           </div>
+
         </div>
       </div>
       <div className="hidden lg:block w-[60vw] h-screen">

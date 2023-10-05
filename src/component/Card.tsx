@@ -1,5 +1,5 @@
 interface Card {
-  title: string;
+  title: string | number;
   description?: string;
   img?: string;
   job?: boolean;

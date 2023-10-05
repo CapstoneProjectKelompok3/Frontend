@@ -8,13 +8,14 @@ import axios from 'axios'
 import Popup from '../../../component/Popup';
 import Input from '../../../component/Input';
 import Button from '../../../component/Button';
-import { validateProfile } from '../../../validate/auth';
+import { validateProfile, validateReset } from '../../../validate/auth';
 const Profile = () => {
   const token = Cookie.get("token");
   const id = Cookie.get("uid");
   const navigate = useNavigate()
   const [edit, setEdit] = useState(false)
   const [modal, setModal] = useState(false)
+  const [reset, setReset] = useState(false)
   const [data, setData] = useState({
     username: '',
     email: '',
@@ -45,6 +46,30 @@ const Profile = () => {
         fullname: values.fullname,
         nik: values.nik,
         gender: values.gender,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((response) => {
+        console.log(response)
+      }).catch((error) => {
+        console.log(error.response.data)
+        toast.error(error.response.data.message)
+      })
+    }
+  })
+  const formikReset = useFormik({
+    initialValues: {
+      currentPass: '',
+      newPass: '',
+      repeatPass: '',
+    },
+    validationSchema: validateReset,
+    onSubmit: (values) => {
+      axios.put(`https://api.flattenbot.site/users/update`, {
+        currentPass: values.currentPass,
+        newPass: values.newPass,
+        repeatPass: values.repeatPass,
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -118,6 +143,9 @@ const Profile = () => {
                       <ul className="py-2 space-y-3 text-sm text-gray-700 font-semibold">
                         <li onClick={() => { setEdit(true), setModal(false) }}>
                           <div className="flex gap-4 px-4 py-2 hover:bg-gray-300 hover:text-white cursor-pointer"><i className="fa-solid fa-user-pen"></i>Edit Profile</div>
+                        </li>
+                        <li onClick={() => { setReset(true), setModal(false) }}>
+                          <div className="flex gap-4 px-4 py-2 hover:bg-gray-300 hover:text-white cursor-pointer"><i className="fa-solid fa-user-pen"></i>Ubah Kata Sandi</div>
                         </li>
                         <li onClick={handleLogout}>
                           <div className="flex gap-4 px-4 py-2 hover:bg-gray-300 hover:text-white cursor-pointer"><i className="fa-solid fa-right-from-bracket"></i>Log Out</div>
@@ -237,6 +265,60 @@ const Profile = () => {
                       {formik.touched.nik && formik.errors.nik ? (
                         <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
                           {formik.errors.nik}
+                        </div>
+                      ) : null}
+                    </div>
+                    <div className="py-2 flex justify-end">
+                      <Button type='submit' label='Tambahkan' />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </Popup>
+        )
+      }
+      {
+        reset && (
+          <Popup onConfirm={handleEditClose}>
+            <div className="relative w-full max-w-md max-h-full">
+              <div className="relative w-96 bg-white rounded-lg shadow">
+                <div className="px-6 py-6 lg:px-8">
+                  <div className="mb-4 text-xl text-center font-bold text-black">
+                    Ubah Kata Sandi
+                  </div>
+                  <form onSubmit={formikReset.handleSubmit} className="space-y-4" action="#">
+                    <div>
+                      <Input
+                        label='Password Sekarang'
+                        onBlur={formikReset.handleBlur}
+                        onChange={formikReset.handleChange}
+                        name='currentPass' placeholder='Masukkan Password Saat ini' star={true} />
+                      {formikReset.touched.currentPass && formikReset.errors.currentPass ? (
+                        <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                          {formikReset.errors.currentPass}
+                        </div>
+                      ) : null}
+                    </div>
+                    <div>
+                      <Input
+                        label='Nama Lengkap'
+                        onChange={formikReset.handleChange}
+                        name='newPass' placeholder='Masukkan Password Baru' star={true} />
+                      {formikReset.touched.newPass && formikReset.errors.newPass ? (
+                        <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                          {formikReset.errors.newPass}
+                        </div>
+                      ) : null}
+                    </div>
+                    <div>
+                      <Input
+                        label='Email'
+                        onChange={formikReset.handleChange}
+                        name='repeatPass' placeholder='Ulangi Password Baru' star={true} />
+                      {formikReset.touched.repeatPass && formikReset.errors.repeatPass ? (
+                        <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                          {formikReset.errors.repeatPass}
                         </div>
                       ) : null}
                     </div>
