@@ -7,7 +7,8 @@ import { validateLogin } from "../../validate/auth";
 import toast from "react-hot-toast";
 import Cookie from "js-cookie";
 import axios from "axios";
-
+import logo from '../../../public/logo.png'
+import banner from '../../../public/loginBackground.png'
 const LoginPage = () => {
   const navigate = useNavigate();
 
@@ -74,7 +75,7 @@ const LoginPage = () => {
           <div className="flex flex-col md:place-items-center">
             <div>
               <img
-                src="../../../public/logo.png"
+                src={logo}
                 alt=""
                 className="w-28 mb-3 md:block hidden"
               />
@@ -146,7 +147,7 @@ const LoginPage = () => {
       </div>
       <div className="hidden lg:block w-[60vw] h-screen">
         <img
-          src="../../../public/loginBackground.png"
+          src={banner}
           alt=""
           className="h-screen"
         />
