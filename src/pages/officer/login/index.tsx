@@ -1,14 +1,15 @@
-import React from "react";
-import Input from "../../component/Input";
-import Button from "../../component/Button";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { validateLogin } from "../../validate/auth";
+
 import toast from "react-hot-toast";
 import Cookie from "js-cookie";
 import axios from "axios";
 import logo from '../../../../public/loginBackground.png'
 import logoMain from '../../../../public/logo.png'
+import { validateLogin } from "../../../validate/auth";
+import Input from "../../../component/Input";
+import Button from "../../../component/Button";
 const LoginPage = () => {
   const navigate = useNavigate();
 
@@ -18,7 +19,7 @@ const LoginPage = () => {
       password: "",
     },
     validationSchema: validateLogin,
-    onSubmit: (values: any) => {
+    onSubmit: (values) => {
       axios
         .post("https://api.flattenbot.site/users/login", {
           email: values.email,

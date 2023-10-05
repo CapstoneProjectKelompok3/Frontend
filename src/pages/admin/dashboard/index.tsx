@@ -3,7 +3,6 @@ import Navbar from "../../../component/Navbar";
 import medic from "../../../assets/medic.png";
 import fire from "../../../assets/fire.png";
 import corps from "../../../assets/corps.png";
-import timsar from "../../../assets/timsar.png";
 import dishub from "../../../assets/dishub.png";
 import Card from "../../../component/Card";
 import Cookie from "js-cookie";
@@ -66,13 +65,14 @@ const Dashboard = () => {
           },
         }
       );
+      console.log(response.data)
       const dishubCount: number = response.data.data.filter((item: any) => item.type === 'dishub').length;
       setDis(dishubCount);
-      const polisiCount: number = response.data.data.filter((item: any) => item.type === 'polisi').length;
+      const polisiCount: number = response.data.data.filter((item: any) => item.type === 'police').length;
       setPolisi(polisiCount);
-      const rsCount: number = response.data.data.filter((item: any) => item.type === 'rs').length;
+      const rsCount: number = response.data.data.filter((item: any) => item.type === 'hospital').length;
       setRs(rsCount);
-      const damkarCount: number = response.data.data.filter((item: any) => item.type === 'damkar').length;
+      const damkarCount: number = response.data.data.filter((item: any) => item.type === 'firestation').length;
       setDamkar(damkarCount);
     } catch (error) {
       console.log(error);

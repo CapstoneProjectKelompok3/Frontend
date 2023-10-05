@@ -55,6 +55,18 @@ export const validateForgot = yup.object({
 })
 export const validateReset = yup.object({
   currentPass: yup.string().required("Anda Harus Memasukkan Password Sekarang"),
-  newPass: yup.string().required("Anda Harus Memasukkan Password Baru"),
-  repeatPass: yup.string().required("Ulangi Password Baru")
-})
+  newPass: yup.string()
+    .required("Anda Harus Memasukkan Password Baru")
+    .min(8, "Password baru harus minimal 8 karakter")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+      "Password baru harus mengandung setidaknya satu huruf kecil, satu huruf besar, satu angka, dan satu karakter khusus (@$!%*?&)"
+    ),
+  repeatPass: yup.string()
+    .required("Ulangi Password Baru")
+    .min(8, "Password baru harus minimal 8 karakter")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+      "Password baru harus mengandung setidaknya satu huruf kecil, satu huruf besar, satu angka, dan satu karakter khusus (@$!%*?&)"
+    ),
+});

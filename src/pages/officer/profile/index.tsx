@@ -66,7 +66,7 @@ const Profile = () => {
     },
     validationSchema: validateReset,
     onSubmit: (values) => {
-      axios.put(`https://api.flattenbot.site/users/update`, {
+      axios.put(`https://api.flattenbot.site/users/changepass`, {
         currentPass: values.currentPass,
         newPass: values.newPass,
         repeatPass: values.repeatPass,
@@ -74,8 +74,10 @@ const Profile = () => {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      }).then((response) => {
-        console.log(response)
+      }).then(() => {
+        toast.success('Berhasil Ganti Password')
+        setReset(false)
+
       }).catch((error) => {
         console.log(error.response.data)
         toast.error(error.response.data.message)

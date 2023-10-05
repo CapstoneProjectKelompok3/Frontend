@@ -1,4 +1,3 @@
-import React from "react";
 import Card from "../../../component/Card";
 import Cookie from "js-cookie";
 import { useEffect } from 'react'

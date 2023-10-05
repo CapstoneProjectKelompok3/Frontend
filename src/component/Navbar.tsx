@@ -15,14 +15,14 @@ const Navbar = () => {
         Authorization: `Bearer ${token}`
       }
     })
-    .then((res) => {
-      setData(res?.data?.data)
-    })
-    .catch((err) => {
-      if (err.response?.data?.status_code === 404) {
-        toast.error('Data Tidak Ditemukan')
-      }
-    })
+      .then((res) => {
+        setData(res?.data?.data)
+      })
+      .catch((err) => {
+        if (err.response?.data?.status_code === 404) {
+          toast.error('Data Tidak Ditemukan')
+        }
+      })
   }
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Navbar = () => {
   }, [])
 
   return (
-    <div className='ml-[20vw] bg-white w-[80vw] fixed h-20 flex justify-end px-10 items-center gap-x-4'>
+    <div className='ml-[20vw] bg-white w-[80vw] z-20 fixed h-20 flex justify-end px-10 items-center gap-x-4'>
       <div className='flex flex-row gap-x-2 items-center'>
         <div className='flex flex-col leading-4 text-end'>
           <div className='font-semibold text-lg'>Welcome</div>

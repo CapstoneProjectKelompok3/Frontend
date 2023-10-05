@@ -17,7 +17,7 @@ const LoginPage = () => {
       password: '',
     },
     validationSchema: validateLogin,
-    onSubmit: (values: any) => {
+    onSubmit: (values) => {
       axios
         .post("https://api.flattenbot.site/users/login", {
           email: values.email,

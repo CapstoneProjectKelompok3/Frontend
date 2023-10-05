@@ -9,7 +9,6 @@ import toast from 'react-hot-toast'
 const Forgot = () => {
     const navigate = useNavigate();
     const token = Cookie.get('token')
-    const role = Cookie.get('role')
     const formik = useFormik({
         initialValues: {
             email: ''

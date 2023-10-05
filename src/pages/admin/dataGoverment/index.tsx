@@ -25,12 +25,11 @@ interface Gooverment {
   type: string;
 }
 
-const libraries = ["places"];
+const libraries: any = ["places"];
 
 const DataGoverment = () => {
   const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState(1);
   const [modalDelete, setModalDelete] = useState(false);
   const [id, setId] = useState(0);
   const [gooverment, setGooverment] = useState<Gooverment[]>([]);
@@ -40,7 +39,7 @@ const DataGoverment = () => {
   const navigate = useNavigate();
   const token = Cookie.get("token");
   const role = Cookie.get("role");
-
+  console.log(edit, modalDelete, id)
   const center = useMemo(() => {
     if (selected) {
       return { lat: selected.lat, lng: selected.lng };
@@ -69,7 +68,7 @@ const DataGoverment = () => {
   useEffect(() => {
     getDataGoverment()
   }, [])
-  const handleMapClick = async (e) => {
+  const handleMapClick = async (e: any) => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
     setSelected({ lat, lng });
@@ -120,23 +119,23 @@ const DataGoverment = () => {
       console.log(error);
     }
   };
-  const handleDelete = async () => {
-    try {
-      const response = await axios.delete(
-        `https://belanjalagiyuk.shop/governments/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setModalDelete(false);
-      getDataGoverment();
-      toast.success(response.data.message);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handleDelete = async () => {
+  //   try {
+  //     const response = await axios.delete(
+  //       `https://belanjalagiyuk.shop/governments/${id}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     setModalDelete(false);
+  //     getDataGoverment();
+  //     toast.success(response.data.message);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -446,8 +445,10 @@ const DataGoverment = () => {
     </section>
   );
 };
-
-const SearchMap = ({ setSelected }) => {
+interface SearchMap {
+  setSelected: any
+}
+const SearchMap: React.FC<SearchMap> = ({ setSelected }) => {
   const {
     ready,
     value,
@@ -457,7 +458,7 @@ const SearchMap = ({ setSelected }) => {
   } = usePlacesAutocomplete();
   const [selectLocation, setSelectLocation] = useState<boolean>(false);
 
-  const handleInput = (e) => {
+  const handleInput = (e: any) => {
     setValue(e.target.value);
     setSelectLocation(false);
   };
