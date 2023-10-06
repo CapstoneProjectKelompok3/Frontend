@@ -29,6 +29,7 @@ const Forgot = () => {
                 })
                 .catch((error) => {
                     console.log(error)
+                    toast.error("Error")
                 })
         }
     })

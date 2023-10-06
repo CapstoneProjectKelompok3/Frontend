@@ -7,7 +7,19 @@ import Cookie from "js-cookie";
 import { useEffect } from 'react'
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import io, { Socket } from "socket.io-client";
+import axios from "axios";
 
+interface Message {
+  content: string;
+  senderId: number | string;
+}
+
+interface Room {
+  idRoom: number;
+  username: string;
+  senderId: number | string;
+}
 const ChatService = () => {
   const [selectedPerson, setSelectedPerson] = useState<any>(1);
 
@@ -22,14 +34,90 @@ const ChatService = () => {
   const [checkedAmbulance, setCheckedAmbulance] = useState<boolean>(false);
   const [checkedSar, setCheckedSar] = useState<boolean>(false);
   const [checkedDishub, setCheckedDishub] = useState<boolean>(false);
-
-  const handleSend = () => { };
+  const [room, setRoom] = useState<Room[]>([]);
+  const [nameChat, setNameChat] = useState<string>("");
+  const [id, setId] = useState<number>(0);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [chat, setChat] = useState<string>("");
   const [showAttachOptions, setShowAttachOptions] = useState(false);
+  const socket: Socket = io("https://api.flattenbot.site");
+  const idUser = Cookie.get("id");
+  const token = Cookie.get("token");
+  const navigate = useNavigate()
+  const role = Cookie.get('role')
+  const rootElement = document.documentElement;
+  rootElement.style.backgroundColor = "#FAFAFA";
   const toggleAttachOptions = () => {
     setShowAttachOptions(!showAttachOptions);
   };
-  const token = Cookie.get("token");
-  const navigate = useNavigate()
+
+  useEffect(() => {
+    socket.on("adminMenerima", (message: any) => {
+      setMessages((prevMessages) => {
+        return [
+          ...prevMessages,
+          { content: message.content, senderId: message.iduser },
+        ];
+      });
+    });
+
+    // Hapus listener saat komponen unmount
+    return () => {
+      socket.off("adminMenerima");
+    };
+  }, []);
+
+  const updateSelectedPersonAndGetDataMessage = async (newValue: any) => {
+    await getDataMessage(newValue);
+  };
+
+  const getChat = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.flattenbot.site/message/getroom`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setRoom(response.data.data);
+      console.log(response.data, "axios");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getDataMessage = async (selectedValue: number) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/message/getmessage/${selectedValue}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setMessages(response.data.data);
+      console.log(messages);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const sendMessage = async () => {
+    console.log(chat);
+    console.log(id);
+    socket.emit("adminMessage", {
+      content: chat,
+      idroom: id,
+      iduser: Number(idUser),
+    });
+    setChat("");
+  };
+
+  useEffect(() => {
+    getChat();
+  }, []);
 
   useEffect(() => {
     if (!token) {
@@ -39,7 +127,7 @@ const ChatService = () => {
       }, 200);
     }
   }, [])
-  const role = Cookie.get('role')
+
   useEffect(() => {
     if (role === 'user') {
       navigate('/beranda')
@@ -73,8 +161,6 @@ const ChatService = () => {
     }
   };
 
-  const rootElement = document.documentElement;
-  rootElement.style.backgroundColor = "#FAFAFA";
 
   return (
     <section>
@@ -93,85 +179,88 @@ const ChatService = () => {
               </div>
               <div className="pt-14">
                 {/* Ganti nilaix nnt menjadi index */}
-                <div
-                  onClick={() => setSelectedPerson(1)}
-                  className="bg-[#D9D9D9] hover:bg-[#D9D9D9] my-2 p-4 flex cursor-pointer items-center gap-4 px-4"
-                >
-                  <div className="bg-line w-10 h-10 rounded-full">
-                    <img
-                      src="https://gravatar.com/avatar/2d20185f4813e2fce560fe1c7ca9ac18?s=400&d=robohash&r=x"
-                      alt=""
-                    />
-                  </div>
-                  <div className="font-semibold text-white text-[16px]">
-                    Eltasya Neu
-                  </div>
-                </div>
-                <div
-                  onClick={() => setSelectedPerson(2)}
-                  className="my-2 p-4 flex cursor-pointer items-center gap-4 px-4 hover:bg-[#D9D9D9]"
-                >
-                  <div className="bg-line w-10 h-10 rounded-full">
-                    <img
-                      src="https://gravatar.com/avatar/d6cee8a1930865e868c4c2f6b4783ea1?s=400&d=robohash&r=x"
-                      alt=""
-                    />
-                  </div>
-                  <div className="font-semibold text-[16px]">Samudin Ham</div>
-                </div>
+                {room.map((element, index) => {
+                  console.log(element.username);
+                  return (
+                    <div key={index}>
+                      <div
+                        onClick={() => {
+                          updateSelectedPersonAndGetDataMessage(element.idRoom),
+                            setId(element.idRoom),
+                            setNameChat(element.username);
+                        }}
+                        className="bg-[#D9D9D9] hover:bg-[#D9D9D9] my-2 p-4 flex cursor-pointer items-center gap-4 px-4"
+                      >
+                        <div className="bg-line w-10 h-10 rounded-full">
+                          <img
+                            src="https://gravatar.com/avatar/2d20185f4813e2fce560fe1c7ca9ac18?s=400&d=robohash&r=x"
+                            alt=""
+                          />
+                        </div>
+                        <div className="font-semibold text-white text-[16px]">
+                          Room {element.idRoom}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="flex flex-col w-full relative">
               {/* navbar chat */}
               <div className="h-16 py-4 shadow-sm bg-background rounded-tr-md">
-                <div className="flex gap-5 items-center h-full px-5">
-                  <div className="bg-line w-10 h-10 rounded-full">
-                    <img
-                      src="https://gravatar.com/avatar/2d20185f4813e2fce560fe1c7ca9ac18?s=400&d=robohash&r=x"
-                      alt=""
-                    />
-                  </div>
-                  <div className="font-semibold text-[16px]">Eltasya Neu</div>
+                <div>
+                  {nameChat && (
+                    <div className="flex gap-5 items-center h-full px-5">
+                      <div className="bg-line w-10 h-10 rounded-full">
+                        <img
+                          src="https://gravatar.com/avatar/2d20185f4813e2fce560fe1c7ca9ac18?s=400&d=robohash&r=x"
+                          alt=""
+                        />
+                      </div>
+                      <div className="font-semibold text-[16px]">
+                        {nameChat}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {/* content chat  */}
-              {selectedPerson && selectedPerson === 1 ? (
-                <div className="p-5 max-h-[70vh] overflow-y-scroll space-y-4 mb-24">
-                  <div className="w-auto bg-[#EDEDED] rounded-md p-4 max-w-xs">
-                    <p>
-                      Saya membutuhkan sebuah ambulance dan sebuah damkar,
-                      terjadi kebakaran yang sangat hebat.
-                    </p>
-                  </div>
-                  <div className="flex justify-end">
-                    <div className="w-auto bg-primary rounded-md p-4 max-w-xs">
-                      <p className="text-white">Baik akan kami kirimkan.</p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="p-5 max-h-[70vh] overflow-y-scroll space-y-4 mb-24">
-                  <div className="w-auto bg-[#EDEDED] rounded-md p-4 max-w-xs">
-                    <p>
-                      Saya membutuhkan sebuah ambulance dan sebuah damkar,
-                      terjadi kebakaran yang sangat hebat.
-                    </p>
-                  </div>
-                  <div className="flex justify-end">
-                    <div className="w-auto bg-primary rounded-md p-4 max-w-xs">
-                      <p className="text-white">Baik akan kami kirimkan2.</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
+              {/* content chat room  */}
+              <div
+                className={`${messages.length > 0
+                    ? `p-5 max-h-[60vh] overflow-y-auto scrollBg`
+                    : null
+                  }`}
+              >
+                {messages &&
+                  messages.map((element, index) => {
+                    return (
+                      <div key={index}>
+                        {element.senderId.toString() !== idUser?.toString() ? (
+                          <div className="flex justify-start py-2">
+                            <div className="w-auto bg-[#EDEDED] rounded-md p-4 max-w-xs">
+                              <p>{element.content}</p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex justify-end py-2">
+                            <div className="w-auto bg-primary rounded-md p-4 max-w-xs">
+                              <p className="text-white">{element.content}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+              </div>
               {/* bottom input and btn  */}
               <div className="p-4 absolute bottom-0 w-full">
                 <div className="flex items-center gap-4">
                   <div className="w-full">
                     <Input
                       placeholder="Masukkan Pesan"
+                      value={chat}
+                      onChange={(e) => setChat(e.target.value)}
                       className="w-full mb-0 border-[#EFEFEF]"
                     />
                   </div>
@@ -181,9 +270,10 @@ const ChatService = () => {
                   >
                     <i className="fa-solid fa-paperclip"></i>
                   </button>
-                  <Button label="Send" onClick={handleSend} />
+                  <Button label="Send" onClick={() => sendMessage()} />
                 </div>
               </div>
+
               {showAttachOptions && (
                 <div className="absolute space-y-4 p-4 w-1/4 z-10 bottom-20 right-36 mt-12 bg-white border rounded-lg shadow-lg">
                   <div>
@@ -367,7 +457,10 @@ const ChatService = () => {
                     ) : null}
                   </div>
                   <div>
-                    <textarea className="textarea textarea-bordered bg-transparent" placeholder="Bio"></textarea>
+                    <textarea
+                      className="textarea textarea-bordered bg-transparent"
+                      placeholder="Bio"
+                    ></textarea>
                   </div>
                   <div>
                     <Button label="Kerahkan" className="w-full" />
