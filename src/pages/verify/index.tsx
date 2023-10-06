@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from "react-router"
 import Button from "../../component/Button"
 import axios from "axios"
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import toast from "react-hot-toast"
 const Verify = () => {
     const navigate = useNavigate()
     const { key } = useParams()
-
+    const [msg, setMsg] = useState('')
     useEffect(() => {
         handleVerify()
     }, [])
@@ -14,13 +14,10 @@ const Verify = () => {
     const handleVerify = () => {
         axios.put(`https://api.flattenbot.site/users/verify-email?key=${key}`)
             .then((response) => {
-                console.log(response.data)
+                setMsg(response.data.message)
             })
             .catch((error) => {
-                console.log(error)
                 console.log(error.response)
-                console.log(key)
-                toast.error("Error")
             })
     }
     return (
@@ -33,7 +30,7 @@ const Verify = () => {
                         </h2>
                         <div className="mt-4 space-y-4 lg:mt-5 md:space-y-5">
                             <div>
-                                <label className="block mb-2 text-sm font-semibold text-center">Pesan Message Disini</label>
+                                <label className="block mb-2 text-sm font-semibold text-center">{msg}</label>
                             </div>
                             <div className='flex justify-end'>
                                 <Button label='OK' className="w-full" onClick={() => navigate('/login')} />
