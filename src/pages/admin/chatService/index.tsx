@@ -90,7 +90,7 @@ const ChatService = () => {
   const getDataMessage = async (selectedValue: number) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/message/getmessage/${selectedValue}`,
+        `https://api.flattenbot.site/message/getmessage/${selectedValue}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -228,8 +228,8 @@ const ChatService = () => {
               {/* content chat room  */}
               <div
                 className={`${messages.length > 0
-                    ? `p-5 max-h-[60vh] overflow-y-auto scrollBg`
-                    : null
+                  ? `p-5 max-h-[60vh] overflow-y-auto scrollBg`
+                  : null
                   }`}
               >
                 {messages &&
