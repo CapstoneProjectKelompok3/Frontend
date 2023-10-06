@@ -17,7 +17,7 @@ const Message = () => {
   const token = Cookie.get("token");
   const role = Cookie.get('role')
   const navigate = useNavigate()
-  const idUser = Cookie.get("id");
+  const idUser = Cookie.get("uid");
   const idRoom = Cookie.get("roomid");
   const socket: Socket = io("https://api.flattenbot.site");
   useEffect(() => {
