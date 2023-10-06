@@ -41,7 +41,7 @@ const ChatService = () => {
   const [chat, setChat] = useState<string>("");
   const [showAttachOptions, setShowAttachOptions] = useState(false);
   const socket: Socket = io("https://api.flattenbot.site");
-  const idUser = Cookie.get("id");
+  const idUser = Cookie.get("uid");
   const token = Cookie.get("token");
   const navigate = useNavigate()
   const role = Cookie.get('role')
@@ -50,8 +50,6 @@ const ChatService = () => {
   const toggleAttachOptions = () => {
     setShowAttachOptions(!showAttachOptions);
   };
-
-  console.log(id)
   useEffect(() => {
     socket.on("adminMenerima", (message: any) => {
       setMessages((prevMessages) => {
@@ -106,8 +104,7 @@ const ChatService = () => {
   };
 
   const sendMessage = async () => {
-    console.log(chat, 'isi chat');
-    console.log(id, 'ini id room');
+    console.log(idUser)
     socket.emit("adminMessage", {
       content: chat,
       idroom: id,
@@ -181,7 +178,6 @@ const ChatService = () => {
               <div className="pt-14">
                 {/* Ganti nilaix nnt menjadi index */}
                 {room.map((element, index) => {
-                  console.log(element);
                   return (
                     <div key={index}>
                       <div
@@ -235,7 +231,7 @@ const ChatService = () => {
               >
                 {messages &&
                   messages.map((element, index) => {
-                    console.log(element)
+                    console.log(element, 'ini history')
                     return (
                       <div key={index}>
                         {element.senderId.toString() !== idUser?.toString() ? (
