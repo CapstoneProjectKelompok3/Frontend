@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import toast from "react-hot-toast"
 const Verify = () => {
     const navigate = useNavigate()
-    const key = useParams()
+    const { key } = useParams()
 
     useEffect(() => {
         handleVerify()
