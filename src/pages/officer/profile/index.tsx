@@ -26,7 +26,6 @@ const Profile = () => {
     }
   })
   const pathname = location.pathname
-
   const handleEditClose = () => {
     setEdit(false)
   }
@@ -35,8 +34,7 @@ const Profile = () => {
       username: '',
       email: '',
       fullname: '',
-      nik: [],
-      gender: 'L',
+      gender: '',
     },
     validationSchema: validateProfile,
     onSubmit: (values) => {
@@ -44,14 +42,14 @@ const Profile = () => {
         username: values.username,
         email: values.email,
         fullname: values.fullname,
-        nik: values.nik,
         gender: values.gender,
       }, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       }).then((response) => {
-        console.log(response)
+        toast.success(response.data.message)
+        setEdit(false)
       }).catch((error) => {
         console.log(error.response.data)
         toast.error(error.response.data.message)
@@ -191,13 +189,6 @@ const Profile = () => {
               </div>
             </div>
             <div>
-              <p className='text-secondary font-medium'>NIK</p>
-              <div className='flex gap-4 py-4 items-center font-medium'>
-                <i className="fa-regular fa-credit-card"></i>
-                <p>{data.document.nik}</p>
-              </div>
-            </div>
-            <div>
               <p className='text-secondary font-medium'>Jenis Kelamin</p>
               <div className='flex gap-4 py-4 items-center font-medium'>
                 <i className="fa-solid fa-venus-mars"></i>
@@ -254,21 +245,10 @@ const Profile = () => {
                     <div>
                       <label className='text-secondary'>Jenis Kelamin</label>
                       <select name="gender" className='select select-bordered w-full max-w-xs bg-white' onChange={formik.handleChange}>
-                        <option value={['male']}>Laki - Laki</option>
-                        <option value={['female']}>Perempuan</option>
+                        <option selected value={'male'}>Pilih Jenis Kelamin</option>
+                        <option value={'male'}>Laki - Laki</option>
+                        <option value={'female'}>Perempuan</option>
                       </select>
-                    </div>
-                    <div>
-                      <Input
-                        label='Nik'
-                        onChange={formik.handleChange}
-                        placeholder='Masukkan Nik'
-                        name='nik' star={true} />
-                      {formik.touched.nik && formik.errors.nik ? (
-                        <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
-                          {formik.errors.nik}
-                        </div>
-                      ) : null}
                     </div>
                     <div className="py-2 flex justify-end">
                       <Button type='submit' label='Tambahkan' />
