@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router"
 import Button from "../../component/Button"
 import axios from "axios"
 import { useEffect, useState } from 'react'
-import toast from "react-hot-toast"
 const Verify = () => {
     const navigate = useNavigate()
     const { key } = useParams()
@@ -17,7 +16,9 @@ const Verify = () => {
                 setMsg(response.data.message)
             })
             .catch((error) => {
-                console.log(error.response)
+                if (error.response.data.status_code === 403) {
+                    setMsg('Key salah atau Key Sudah tidak berlaku')
+                }
             })
     }
     return (

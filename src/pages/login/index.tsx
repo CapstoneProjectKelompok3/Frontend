@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Input from "../../component/Input";
 import Button from "../../component/Button";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ import logo from '../../../public/logo.png'
 import banner from '../../../public/loginBackground.png'
 const LoginPage = () => {
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -67,7 +67,6 @@ const LoginPage = () => {
       }
     }
   }, [])
-
   return (
     <section className="flex flex-row h-screen">
       <div className="flex flex-col justify-center place-items-center md:w-[40vw] w-full">
@@ -110,9 +109,14 @@ const LoginPage = () => {
               <Input
                 placeholder="*************"
                 label="Password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
-                icon={<i className="fa-solidafa-key"></i>}
+                icon={<div
+                  className="transform cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <i className="fa-solid fa-eye-slash"></i> : <i className="fa-solid fa-eye"></i>}
+                </div>}
                 className="w-full"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}

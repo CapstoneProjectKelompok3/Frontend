@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Input from "../../component/Input";
 import Button from "../../component/Button";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,6 +19,8 @@ const Register = () => {
   const navigate = useNavigate();
   const token = Cookie.get('token')
   const role = Cookie.get('role')
+  const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     if (token) {
       if (role === 'admin' || role === 'superadmin') {
@@ -131,9 +133,14 @@ const Register = () => {
                 <Input
                   placeholder="*************"
                   label="Password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
-                  icon={<i className="fa-solid fa-key"></i>}
+                  icon={<div
+                    className="transform cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <i className="fa-solid fa-eye-slash"></i> : <i className="fa-solid fa-eye"></i>}
+                  </div>}
                   className="w-full"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
