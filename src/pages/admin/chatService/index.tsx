@@ -51,6 +51,7 @@ const ChatService = () => {
     setShowAttachOptions(!showAttachOptions);
   };
 
+  console.log(id)
   useEffect(() => {
     socket.on("adminMenerima", (message: any) => {
       setMessages((prevMessages) => {
@@ -105,8 +106,8 @@ const ChatService = () => {
   };
 
   const sendMessage = async () => {
-    console.log(chat);
-    console.log(id);
+    console.log(chat, 'isi chat');
+    console.log(id, 'ini id room');
     socket.emit("adminMessage", {
       content: chat,
       idroom: id,
@@ -180,7 +181,7 @@ const ChatService = () => {
               <div className="pt-14">
                 {/* Ganti nilaix nnt menjadi index */}
                 {room.map((element, index) => {
-                  console.log(element.username);
+                  console.log(element);
                   return (
                     <div key={index}>
                       <div
@@ -234,6 +235,7 @@ const ChatService = () => {
               >
                 {messages &&
                   messages.map((element, index) => {
+                    console.log(element)
                     return (
                       <div key={index}>
                         {element.senderId.toString() !== idUser?.toString() ? (
