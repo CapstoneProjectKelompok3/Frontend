@@ -106,8 +106,10 @@ const Message = () => {
               return (
                 <div key={index}>
                   {element.senderId.toString() !== idUser?.toString() ? (
-                    <div className="w-auto bg-[#EDEDED] rounded-md p-4 max-w-xs">
-                      <p>{element.content}</p>
+                    <div className="flex justify-start py-2">
+                      <div className="w-auto bg-[#EDEDED] rounded-md p-4 max-w-xs">
+                        <p>{element.content}</p>
+                      </div>
                     </div>
                   ) : (
                     <div className="flex justify-end py-2">
