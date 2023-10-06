@@ -28,7 +28,7 @@ const App = () => {
         <Route element={<LoginPage />} path="/login" />
         <Route element={<Register />} path="/register" />
         <Route element={<Forgot />} path="/forgot-password" />
-        <Route element={<Verify />} path="/verify-email/:id" />
+        <Route element={<Verify />} path="/verify-email/:key" />
 
         <Route element={<Dashboard />} path="/dashboard" />
         <Route element={<DataAdmin />} path="/data-admin" />
