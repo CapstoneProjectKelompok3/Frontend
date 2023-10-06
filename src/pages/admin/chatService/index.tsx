@@ -50,7 +50,6 @@ const ChatService = () => {
   const toggleAttachOptions = () => {
     setShowAttachOptions(!showAttachOptions);
   };
-
   useEffect(() => {
     socket.on("adminMenerima", (message: any) => {
       setMessages((prevMessages) => {
@@ -105,6 +104,7 @@ const ChatService = () => {
   };
 
   const sendMessage = async () => {
+    console.log(idUser)
     socket.emit("adminMessage", {
       content: chat,
       idroom: id,
@@ -231,7 +231,7 @@ const ChatService = () => {
               >
                 {messages &&
                   messages.map((element, index) => {
-                    console.log(element)
+                    console.log(element, 'ini history')
                     return (
                       <div key={index}>
                         {element.senderId.toString() !== idUser?.toString() ? (
