@@ -5,14 +5,13 @@ import { useEffect } from 'react'
 import toast from "react-hot-toast"
 const Verify = () => {
     const navigate = useNavigate()
-    const key = useParams()
+    const { key } = useParams()
 
     useEffect(() => {
         handleVerify()
     }, [])
 
     const handleVerify = () => {
-        console.log(key)
         axios.put(`https://api.flattenbot.site/users/verify-email?key=${key}`)
             .then((response) => {
                 console.log(response.data)
@@ -20,6 +19,7 @@ const Verify = () => {
             .catch((error) => {
                 console.log(error)
                 console.log(error.response)
+                console.log(key)
                 toast.error("Error")
             })
     }
