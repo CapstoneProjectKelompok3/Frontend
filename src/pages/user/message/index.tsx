@@ -17,7 +17,7 @@ const Message = () => {
   const token = Cookie.get("token");
   const role = Cookie.get('role')
   const navigate = useNavigate()
-  const idUser = Cookie.get("id");
+  const idUser = Cookie.get("uid");
   const idRoom = Cookie.get("roomid");
   const socket: Socket = io("https://api.flattenbot.site");
   useEffect(() => {
@@ -40,7 +40,7 @@ const Message = () => {
 
   useEffect(() => {
     getDataMessage();
-  }, []);
+  });
 
   useEffect(() => {
     socket.on("userMenerima", (message: any) => {
@@ -67,6 +67,7 @@ const Message = () => {
   };
 
   const getDataMessage = async () => {
+    console.log(idRoom)
     try {
       const response = await axios.get(
         `https://api.flattenbot.site/message/getmessage/${idRoom}`,
@@ -119,7 +120,8 @@ const Message = () => {
             })} */}
           {messages &&
             messages.map((element, index) => {
-              console.log(element.senderId, "iniuser");
+              console.log(element, "iniuser");
+              console.log(element, "inielement");
               return (
                 <div key={index}>
                   {element.senderId.toString() !== idUser?.toString() ? (
