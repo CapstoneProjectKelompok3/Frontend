@@ -12,12 +12,14 @@ const Verify = () => {
     }, [])
 
     const handleVerify = () => {
+        console.log(key)
         axios.put(`https://api.flattenbot.site/users/verify-email?key=${key}`)
             .then((response) => {
-                console.log(response)
+                console.log(response.data)
             })
             .catch((error) => {
                 console.log(error)
+                console.log(error.response)
                 toast.error("Error")
             })
     }

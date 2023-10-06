@@ -7,7 +7,8 @@ import { validateRegister } from "../../validate/auth";
 import axios from "axios";
 import Cookie from "js-cookie";
 import toast from "react-hot-toast";
-
+import logo from '../../../public/logo.png'
+import banner from '../../../public/loginBackground.png'
 interface RegistrationFormData {
   email: string;
   username: string;
@@ -65,7 +66,7 @@ const Register = () => {
           <div className="flex flex-col md:place-items-center">
             <div>
               <img
-                src="../../../public/logo.png"
+                src={logo}
                 alt=""
                 className="w-28 mb-3 md:block hidden"
               />
@@ -159,6 +160,13 @@ const Register = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="hidden lg:block w-[60vw] h-screen">
+        <img
+          src={banner}
+          alt=""
+          className="h-screen"
+        />
       </div>
     </section>
   );
