@@ -36,7 +36,8 @@ const Input: FC<InputProps> = ({
   return (
     <div>
       {location.pathname === "/login" ||
-        location.pathname === "/register" ? (
+        location.pathname === "/register" || location.pathname === "/login-petugas" ||
+        location.pathname === "/register-petugas" ? (
         <div className="flex flex-col">
           <label className="text-secondary">{label} {star ? <span className="text-red-500">*</span> : null}</label>
           <div className="flex flex-row">

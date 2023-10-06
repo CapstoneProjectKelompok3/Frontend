@@ -65,6 +65,17 @@ const Sidebar = () => {
                   <div>Data Goverment</div>
                 </li>
               </Link>
+              <Link to="/data-vehicle">
+                <li
+                  className={`${pathname === "/data-vehicle" ? "bg-primary text-white font-semibold" : ""
+                    } flex flex-row gap-x-4 align-middle rounded-md px-10 py-3 mb-3 hover:bg-primary hover:text-white hover:font-semibold`}
+                >
+                  <div>
+                  <i className="fa-solid fa-truck"></i>
+                  </div>
+                  <div>Data Vehicle</div>
+                </li>
+              </Link>
               <Link to='/data-user'>
                 <li
                   className={`${pathname === "/data-user" ? "bg-primary text-white font-semibold" : ""

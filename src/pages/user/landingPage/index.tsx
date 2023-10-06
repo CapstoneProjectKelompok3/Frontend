@@ -23,7 +23,7 @@ const LandingPage = () => {
         toast.error("Silahkan Login Terlebih Dahulu");
       }, 200);
     }
-    if (role === "admin" || role === "superadmin") {
+    if (role !== 'user') {
       navigate("/dashboard");
     }
   }, []);
@@ -50,6 +50,7 @@ const LandingPage = () => {
           const { latitude, longitude } = position.coords;
           localStorage.setItem("userLatitude", latitude);
           localStorage.setItem("userLongitude", longitude);
+          localStorage.setItem("isConfirm", false);
           navigate("/lokasi");
         },
         (error) => {

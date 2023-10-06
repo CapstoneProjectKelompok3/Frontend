@@ -18,13 +18,18 @@ import DataGoverment from "./pages/admin/dataGoverment";
 import History from "./pages/user/history";
 import DashboardPetugas from "./pages/officer/dashboard";
 import DataUser from "./pages/admin/dataUser";
+import LoginPetugas from "./pages/officer/login";
+import RegisterPetugas from "./pages/officer/register";
+import DataVehicle from "./pages/admin/dataVehicle";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<LoginPage />} path="/login" />
+        <Route element={<LoginPetugas />} path="/login-petugas" />
         <Route element={<Register />} path="/register" />
+        <Route element={<RegisterPetugas />} path="/register-petugas" />
 
         <Route element={<Dashboard />} path="/dashboard" />
         <Route element={<DataAdmin />} path="/data-admin" />
@@ -32,6 +37,7 @@ const App = () => {
         <Route element={<ChatService />} path="/chat-layanan" />
         <Route element={<DataOfficer />} path="/data-petugas" />
         <Route element={<DataGoverment />} path="/data-goverment" />
+        <Route element={<DataVehicle />} path="/data-vehicle" />
         <Route element={<Case />} path="/kasus" />
 
         <Route element={<DashboardPetugas />} path="/dashboard-petugas" />

@@ -76,6 +76,9 @@ const Profile = () => {
     Cookie.remove("role");
     Cookie.remove("uid");
     Cookie.remove("roomid");
+    localStorage.removeItem('userLatitude')
+    localStorage.removeItem('userLongitude');
+    localStorage.removeItem('speach-text');
 
     navigate("/login");
     toast.success("Berhasil Logout");
@@ -251,12 +254,12 @@ const Profile = () => {
         )
       }
 
-      <div className="fixed bottom-0 left-0 w-full h-[12vh] px-5 drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)] bg-white rounded-tl-xl rounded-tr-xl">
+<div className="fixed bottom-0 left-0 w-full h-[12vh] px-5 drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)] bg-white rounded-tl-xl rounded-tr-xl">
         <div className="flex flex-row justify-between place-items-center h-full px-5">
-          <div onClick={() => navigate('/beranda')} className={`flex flex-col place-items-center ${pathname === '/beranda' ? 'text-black fa-lg' : 'text-secondary'} `}>
+          <div onClick={() => navigate('/dashboard-petugas')} className={`flex flex-col place-items-center ${pathname === '/dashboard-petugas' ? 'text-black fa-lg' : 'text-secondary'} `}>
             <i className="fa-solid fa-house"></i>
           </div>
-          <div onClick={() => navigate('/riwayat')} className={`flex flex-col place-items-center ${pathname === '/riwayat' ? 'text-black fa-lg' : 'text-secondary'} `}>
+          <div onClick={() => navigate('/riwayat-petugas')} className={`flex flex-col place-items-center ${pathname === '/riwayat-petugas' ? 'text-black fa-lg' : 'text-secondary'} `}>
             <i className="fa-solid fa-clock-rotate-left"></i>
           </div>
           <div onClick={() => navigate('/profile')} className={`flex flex-col place-items-center ${pathname === '/profile' ? 'text-black fa-lg' : 'text-secondary'} `}>

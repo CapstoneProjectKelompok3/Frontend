@@ -28,7 +28,7 @@ export const validateProfile = yup.object({
 });
 
 export const validateGooverment = yup.object({
-  name: yup.string().required("Anda Harus Memasukkan "),
+  name: yup.string().required("Anda Harus Memasukkan Nama Goverment"),
   address: yup
     .string()
     .required('Anda Harus Memasukkan Alamat Lengkap'),
@@ -46,6 +46,10 @@ export const validateRegister = yup.object({
       /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/,
       "Emails harus menggunakan @"
     ),
-  password: yup.string().min(5, 'Password Minimal 5 Karakter').required("Anda Harus Memasukkan Password"),
+  password: yup.string().min(8, 'Password Minimal 8 Karakter').required("Anda Harus Memasukkan Password"),
   nik: yup.string().min(16, 'Mnimal 16 angka').required("Anda Harus Memasukkan NIK"),
+});
+
+export const validateVehicle = yup.object({
+  
 });
