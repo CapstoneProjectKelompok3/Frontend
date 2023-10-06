@@ -99,25 +99,6 @@ const Message = () => {
         </div>
 
         <div className="p-5 max-h-[80vh] overflow-y-scroll">
-          {/* {messages &&
-            messages.map((element, index) => {
-              console.log(element.senderId, "iniuser");
-              return (
-                <div key={index}>
-                  {element.senderId.toString() !== idUser?.toString() ? (
-                    <div className="w-auto bg-[#EDEDED] rounded-md p-4 max-w-xs">
-                      <p>{element.content}</p>
-                    </div>
-                  ) : (
-                    <div className="flex justify-end py-2">
-                      <div className="w-auto bg-primary rounded-md p-4 max-w-xs">
-                        <p className="text-white">{element.content}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })} */}
           {messages &&
             messages.map((element, index) => {
               console.log(element, "iniuser");
