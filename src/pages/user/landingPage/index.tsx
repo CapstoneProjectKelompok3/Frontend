@@ -7,6 +7,7 @@ import Cookie from "js-cookie";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const LandingPage = () => {
   const token = Cookie.get("token");
@@ -49,7 +50,28 @@ const LandingPage = () => {
           const { latitude, longitude } = position.coords;
           localStorage.setItem("userLatitude", latitude.toString());
           localStorage.setItem("userLongitude", longitude.toString());
-          navigate("/lokasi");
+          axios.post(
+            `https://api.flattenbot.site/message/newmessage`,
+            {
+              message: transcript,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+            .then((response) => {
+              console.log(response.data);
+              Cookie.set("roomid", response.data.room);
+              navigate('/lokasi')
+              // navigate("/chat", {
+              //   state: response.data.admin,
+              // });
+            })
+            .catch((error: any) => {
+              console.log(error);
+            });
         },
         () => {
           toast.error("Gagal mendapatkan lokasi");

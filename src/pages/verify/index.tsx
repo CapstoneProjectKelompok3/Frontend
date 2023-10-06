@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router"
 import Button from "../../component/Button"
 import axios from "axios"
 import { useEffect } from 'react'
+import toast from "react-hot-toast"
 const Verify = () => {
     const navigate = useNavigate()
     const key = useParams()
@@ -17,6 +18,7 @@ const Verify = () => {
             })
             .catch((error) => {
                 console.log(error)
+                toast.error("Error")
             })
     }
     return (
