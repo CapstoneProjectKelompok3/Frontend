@@ -19,12 +19,13 @@ import DashboardPetugas from "./pages/officer/dashboard";
 import DataUser from "./pages/admin/dataUser";
 import Forgot from "./pages/forgot";
 import Verify from "./pages/verify";
+import Landing from "./pages/landing";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<LoginPage />} />
+        <Route index element={<Landing />} />
         <Route element={<LoginPage />} path="/login" />
         <Route element={<Register />} path="/register" />
         <Route element={<Forgot />} path="/forgot-password" />
