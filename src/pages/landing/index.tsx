@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router';
 import logo from '../../../public/logo.png'
 import Button from '../../component/Button';
+import Cookie from 'js-cookie'
 const Landing = () => {
+    const token = Cookie.get('token')
     const navigate = useNavigate()
     return (
         <div className="bg-white h-screen">
@@ -17,9 +19,13 @@ const Landing = () => {
                         </div>
                     </div>
                     <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                        <div onClick={() => navigate('/login')} className="text-sm font-semibold leading-6 text-gray-900">
-                            Log in
-                        </div>
+                        {
+                            token ? null : (
+                                <div onClick={() => navigate('/login')} className="cursor-pointer hover:text-primary text-sm font-semibold leading-6 text-gray-900">
+                                    Log in
+                                </div>
+                            )
+                        }
                     </div>
                 </nav>
             </header>
@@ -45,12 +51,22 @@ const Landing = () => {
                         <p className="mt-6 text-lg leading-8 text-gray-600">
                             "Kami di sini untuk mengingatkan Anda tentang pentingnya panggilan darurat 911 dalam situasi darurat. Keamanan Anda adalah prioritas kami."
                         </p>
-                        <div className="mt-10 flex items-center justify-center gap-x-6">
-                            <Button
-                                type='button'
-                                label='Get Started'
-                                onClick={() => navigate('/login')}
-                            />
+                        <div className="mt-10 transition hover:scale-105 flex items-center justify-center gap-x-6">
+                            {
+                                token ? (
+                                    <Button
+                                        type='button'
+                                        label='Beranda'
+                                        onClick={() => navigate('/beranda')}
+                                    />
+                                ) : (
+                                    <Button
+                                        type='button'
+                                        label='Get Started'
+                                        onClick={() => navigate('/login')}
+                                    />
+                                )
+                            }
                         </div>
                     </div>
                 </div>

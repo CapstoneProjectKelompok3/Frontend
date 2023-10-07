@@ -15,7 +15,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const pathname = location.pathname;
   const [buttonSpeach, setButtonSpeach] = useState<boolean>(false);
-
+  const [hover, setHover] = useState(false)
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -93,10 +93,22 @@ const LandingPage = () => {
             Halo, <span className="font-semibold">User</span>
           </div>
           <div>
-            <button className="w-8 h-8 p-0 rounded-full flex items-center justify-center">
+            <button
+              onMouseEnter={() => setHover(true)}
+              onMouseLeave={() => setHover(false)}
+              className="w-8 h-8 p-0 cursor-pointer rounded-full flex items-center justify-center">
               <i className="fa-solid fa-circle-info fa-xl"></i>
             </button>
           </div>
+          {
+            hover ? (
+              <div className="absolute top-10 right-10 z-10 w-64 h-32 bg-gray-100 rounded-lg">
+                <div className="p-3 text-sm font-thin">
+                  Klik tombol di bawah ini, dan Anda akan terhubung langsung ke admin kami untuk memberi tahu kami apa yang Anda butuhkan.
+                </div>
+              </div>
+            ) : null
+          }
         </div>
         <div className="flex justify-center py-2">
           Emergency CallCenter Indonesia

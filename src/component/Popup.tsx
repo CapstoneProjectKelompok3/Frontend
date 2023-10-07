@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef } from 'react'
+import { motion } from 'framer-motion'
 interface PopupProps {
   onConfirm: () => void;
   children?: React.ReactNode;
@@ -24,10 +25,12 @@ const Popup: FC<PopupProps> = ({ onConfirm, children }) => {
   const modalContentStyle = 'rounded-md'
   return (
     <div>
-      <div className={`${modalOverlayStyle}`}>
-        <div ref={modalRef} className={`${modalContentStyle}`}>
+      <div className={modalOverlayStyle}>
+        <motion.div
+          animate={{ y: 10 }}
+          ref={modalRef} className={modalContentStyle}>
           {children}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
