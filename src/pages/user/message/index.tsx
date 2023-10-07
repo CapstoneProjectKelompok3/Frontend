@@ -1,6 +1,6 @@
-import Button from "../../../component/Button"
+import Button from "../../../component/Button";
 import Cookie from "js-cookie";
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import io, { Socket } from "socket.io-client";
@@ -15,28 +15,28 @@ const Message = () => {
   const [chat, setChat] = useState<string>("");
 
   const token = Cookie.get("token");
-  const role = Cookie.get('role')
-  const navigate = useNavigate()
+  const role = Cookie.get("role");
+  const navigate = useNavigate();
   const idUser = Cookie.get("uid");
   const idRoom = Cookie.get("roomid");
   const socket: Socket = io("https://api.flattenbot.site");
+  
   useEffect(() => {
     if (!token) {
-      navigate('/login')
+      navigate("/login");
       setTimeout(() => {
-        toast.error("Silahkan Login Terlebih Dahulu")
+        toast.error("Silahkan Login Terlebih Dahulu");
       }, 200);
       if (!idRoom) {
         navigate("/beranda");
       }
     }
-
-  }, [])
+  }, []);
   useEffect(() => {
-    if (role === 'admin' || role === 'superadmin') {
-      navigate('/dashboard')
+    if (role === "admin" || role === "superadmin") {
+      navigate("/dashboard");
     }
-  })
+  });
 
   useEffect(() => {
     getDataMessage();
@@ -88,12 +88,13 @@ const Message = () => {
       <div>
         {/* navbar chat */}
         <div className="h-16 bg-primary shadow-sm rounded-sm">
-          <div className="flex gap-5 items-center justify-center h-full px-5">
-            <div className='bg-none border-2 w-10 h-10 flex items-center justify-center rounded-full'>
-              <i className="fa-solid fa-user-headset"></i>
+          <div className="flex gap-5 items-center justify-between h-full px-5">
+            <div onClick={() => navigate('/lokasi')} className="bg-none  w-15 h-15 flex items-center justify-center ">
+              <i className="fa-solid fa-location-dot text-2xl text-white"></i>
             </div>
-            <div className="font-semibold text-white">
-              Costumer Service
+            <div className="font-semibold text-white">Costumer Service</div>
+            <div onClick={() => navigate('/riwayat')} className="bg-none  w-15 h-15 flex items-center justify-center ">
+              <i className="fa-solid fa-clock-rotate-left text-2xl text-white"></i>
             </div>
           </div>
         </div>
@@ -146,7 +147,7 @@ const Message = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Message
+export default Message;

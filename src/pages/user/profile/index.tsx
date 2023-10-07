@@ -32,14 +32,15 @@ const Profile = () => {
   const formik = useFormik({
     initialValues: {
       username: '',
+      email: '',
       fullname: '',
       gender: '',
     },
     validationSchema: validateProfile,
     onSubmit: (values) => {
-      console.log("ini edit")
       axios.put(`https://api.flattenbot.site/users/update`, {
         username: values.username,
+        email: values.email,
         fullname: values.fullname,
         gender: values.gender,
       }, {
@@ -63,7 +64,6 @@ const Profile = () => {
     },
     validationSchema: validateReset,
     onSubmit: (values) => {
-      console.log('sdsd')
       axios.put(`https://api.flattenbot.site/users/changepass`, {
         currentPass: values.currentPass,
         newPass: values.newPass,
@@ -168,7 +168,7 @@ const Profile = () => {
                 <img src={profile} className='w-full h-full bg-cover rounded-full' alt="" />
               </div>
             </div>
-          </div>  
+          </div>
           <div className='py-10 px-4 space-y-2'>
             <div>
               <p className='text-secondary font-medium'>Username</p>
@@ -210,7 +210,7 @@ const Profile = () => {
                   <div className="mb-4 text-xl text-center font-bold text-black">
                     Edit User
                   </div>
-                  <form onSubmit={formik.handleSubmit} className="space-y-4">
+                  <form onSubmit={formik.handleSubmit} className="space-y-4" action="#">
                     <div>
                       <Input
                         label='Username'
@@ -235,9 +235,20 @@ const Profile = () => {
                       ) : null}
                     </div>
                     <div>
+                      <Input
+                        label='Email'
+                        onChange={formik.handleChange}
+                        name='email' placeholder='Masukkan Email' star={true} />
+                      {formik.touched.email && formik.errors.email ? (
+                        <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                          {formik.errors.email}
+                        </div>
+                      ) : null}
+                    </div>
+                    <div>
                       <label className='text-secondary'>Jenis Kelamin</label>
-                      <select name="gender"  className='select select-bordered w-full max-w-xs bg-white' onChange={formik.handleChange}>
-                        <option value={'male'}>Pilih Jenis Kelamin</option>
+                      <select name="gender" className='select select-bordered w-full max-w-xs bg-white' onChange={formik.handleChange}>
+                        <option selected value={'male'}>Pilih Jenis Kelamin</option>
                         <option value={'male'}>Laki - Laki</option>
                         <option value={'female'}>Perempuan</option>
                       </select>
@@ -315,7 +326,7 @@ const Profile = () => {
           <div onClick={() => navigate('/riwayat-petugas')} className={`flex flex-col place-items-center ${pathname === '/riwayat-petugas' ? 'text-black fa-lg' : 'text-secondary'} `}>
             <i className="fa-solid fa-clock-rotate-left"></i>
           </div>
-          <div onClick={() => navigate('/profile-petugas')} className={`flex flex-col place-items-center ${pathname === '/profile' ? 'text-black fa-lg' : 'text-secondary'} `}>
+          <div onClick={() => navigate('/profile')} className={`flex flex-col place-items-center ${pathname === '/profile' ? 'text-black fa-lg' : 'text-secondary'} `}>
             <i className="fa-solid fa-user"></i>
           </div>
         </div>

@@ -1,15 +1,15 @@
-
+import React, { useEffect } from "react";
+import Input from "../../../component/Input";
+import Button from "../../../component/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-
+import { validateLogin } from "../../../validate/auth";
 import toast from "react-hot-toast";
 import Cookie from "js-cookie";
 import axios from "axios";
 import logo from '../../../../public/loginBackground.png'
 import logoMain from '../../../../public/logo.png'
-import { validateLogin } from "../../../validate/auth";
-import Input from "../../../component/Input";
-import Button from "../../../component/Button";
+
 const LoginPage = () => {
   const navigate = useNavigate();
 
@@ -21,27 +21,18 @@ const LoginPage = () => {
     validationSchema: validateLogin,
     onSubmit: (values) => {
       axios
-        .post("https://api.flattenbot.site/users/login", {
+        .post("https://belanjalagiyuk.shop/drivers/login", {
           email: values.email,
           password: values.password,
         })
         .then((res) => {
           Cookie.set("token", res?.data?.data?.token);
-          Cookie.set("role", res?.data?.data?.user?.level);
-          Cookie.set('uid', res?.data?.data?.user?.id)
+          Cookie.set('uid', res?.data?.data?.id)
 
-          const role = res?.data?.data?.user?.level;
-          if (role === "superadmin" || role === "admin") {
             toast.success("Berhasil Login");
             setTimeout(() => {
-              navigate("/dashboard");
+              navigate("/dashboard-petugas");
             }, 1000);
-          } else {
-            toast.success("Berhasil Login");
-            setTimeout(() => {
-              navigate("/beranda");
-            }, 1000);
-          }
         })
         .catch((err) => {
           if (err.response.data.status_code === 400) {
@@ -122,7 +113,7 @@ const LoginPage = () => {
           </form>
           <div className="text-center">
             Belum punya akun?{" "}
-            <Link to="/register" className="text-red-500 hover:text-red-700">
+            <Link to="/register-petugas" className="text-red-500 hover:text-red-700">
               Daftar Disini
             </Link>
           </div>
