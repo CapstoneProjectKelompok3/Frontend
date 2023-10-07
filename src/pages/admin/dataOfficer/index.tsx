@@ -8,14 +8,22 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { number } from "yup";
 
+interface Driver {
+  driving_status: string;
+  fullname: string;
+  email: string;
+  goverment_type: string;
+  status: boolean;
+}
 const DataOfficer = () => {
   const rootElement = document.documentElement;
   rootElement.style.backgroundColor = "#FAFAFA";
-
   const [data, setData] = useState<any>([]);
-  const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [id, setId] = useState<number>(0);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const token = Cookie.get("token");
   const navigate = useNavigate();
   const role = Cookie.get("role");
@@ -56,14 +64,30 @@ const DataOfficer = () => {
     getOfficer();
   }, []);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
   const handleEdit = () => {
     setEdit(true);
   };
-  const handleEditClose = () => {
-    setEdit(false);
+
+  const deleteDriver = (id: number) => {
+    setOpenModal(!openModal);
+    setId(id);
+  };
+
+  const handleDelete = () => {
+    axios
+      .delete(`https://belanjalagiyuk.shop/drivers/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        toast.success("Berhasil menghapus driver");
+        getOfficer();
+        setOpenModal(false)
+      })
+      .catch(() => {
+        toast.error("Gagal menghapus driver");
+      });
   };
 
   return (
@@ -100,20 +124,23 @@ const DataOfficer = () => {
                   data.map((item, index) => {
                     return (
                       <tr className="bg-gray-300-200 items-center border-none font-medium">
-                        <td>{index+1}</td>
+                        <td>{index + 1}</td>
                         <td>{item.fullname}</td>
                         <td>{item.email}</td>
                         <td>{item.goverment_name}</td>
                         <td className="uppercase">{item.driving_status}</td>
                         <td>
                           <div className="flex gap-7">
-                            <div
+                            {/* <div
                               onClick={handleEdit}
                               className="cursor-pointer hover:text-primary"
                             >
                               <i className="fa-solid fa-pen-to-square text-md"></i>
-                            </div>
-                            <div className="cursor-pointer hover:text-primary">
+                            </div> */}
+                            <div
+                              className="cursor-pointer hover:text-primary"
+                              onClick={() => deleteDriver(item.id)}
+                            >
                               <i className="fa-solid fa-trash text-md"></i>
                             </div>
                           </div>
@@ -132,8 +159,8 @@ const DataOfficer = () => {
             </table>
           </div>
         </div>
-        {edit && (
-          <Popup onConfirm={handleEditClose}>
+        {/* {edit && (
+          <Popup onConfirm={() => setEdit(false)}>
             <div className="relative w-full max-w-md max-h-full">
               <div className="relative w-96 bg-white rounded-lg shadow">
                 <div className="px-6 py-6 lg:px-8">
@@ -164,6 +191,25 @@ const DataOfficer = () => {
                     </div>
                   </form>
                 </div>
+              </div>
+            </div>
+          </Popup>
+        )} */}
+        {openModal && (
+          <Popup onConfirm={() => setOpenModal(false)}>
+            <div className="relative h-56 bg-white rounded-lg shadow">
+              <div className="px-10 py-10 flex flex-col space-y-3 ">
+                <div className="space-y-2 flex flex-col justify-center items-center">
+                  <h3 className="text-xl text-center font-bold text-black">
+                    Hapus Data
+                  </h3>
+                  <p className="text-md text-center">
+                    Apakah Anda Yakin ingin Menghapus Data ini ?
+                  </p>
+                </div>
+              </div>
+              <div className="px-10 flex justify-end">
+                <Button onClick={() => handleDelete()} label="Oke" />
               </div>
             </div>
           </Popup>

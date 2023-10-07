@@ -3,11 +3,11 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import sirine from "../../../assets/sirine.png";
-import cancel from "../../../assets/cancel.svg";
 import Cookie from "js-cookie";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const LandingPage = () => {
   const token = Cookie.get("token");
@@ -23,7 +23,7 @@ const LandingPage = () => {
         toast.error("Silahkan Login Terlebih Dahulu");
       }, 200);
     }
-    if (role !== 'user') {
+    if (role !== "user") {
       navigate("/dashboard");
     }
   }, []);
@@ -52,11 +52,32 @@ const LandingPage = () => {
           localStorage.setItem("userLongitude", longitude);
           localStorage.setItem("isConfirm", false);
           navigate("/lokasi");
+          axios
+            .post(
+              `https://api.flattenbot.site/message/newmessage`,
+              {
+                message: transcript,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
+            .then((response) => {
+              console.log(response.data);
+              Cookie.set("roomid", response.data.room);
+              navigate("/lokasi");
+            })
+            .catch((error: any) => {
+              console.log(error);
+            });
         },
-        (error) => {
+        () => {
           toast.error("Gagal mendapatkan lokasi");
         }
       );
+      // axios.post(``)
     }, 1500);
   };
 

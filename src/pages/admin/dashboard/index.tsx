@@ -3,18 +3,21 @@ import Navbar from "../../../component/Navbar";
 import medic from "../../../assets/medic.png";
 import fire from "../../../assets/fire.png";
 import corps from "../../../assets/corps.png";
-import timsar from "../../../assets/timsar.png";
 import dishub from "../../../assets/dishub.png";
 import Card from "../../../component/Card";
 import Cookie from "js-cookie";
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const Dashboard = () => {
   const role = Cookie.get("role");
   const token = Cookie.get("token");
   const navigate = useNavigate()
+  const [unit, setUnit] = useState<any>([])
+  const [cases, setCases] = useState<number>(0)
+  const [driver, setDriver] = useState<number>(0)
 
   useEffect(() => {
     if (!token) {
@@ -24,14 +27,67 @@ const Dashboard = () => {
       }, 200);
     }
   }, [])
+  
   useEffect(() => {
     if (role === 'user') {
       navigate('/beranda')
     }
   })
 
+  useEffect(() => {
+    if(role === 'superadmin') {
+      getUnit()
+    }
+    if (role === 'admin') {
+      getCase()
+      getDriver()
+    }
+  }, [])
+
   const rootElement = document.documentElement;
   rootElement.style.backgroundColor = "#FAFAFA";
+
+ const getUnit = () => {
+  axios.get('https://belanjalagiyuk.shop/governments/count', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then((res) => {
+    setUnit(res?.data?.data)
+  })
+  .catch(() => {
+    toast.error('Gagal mendapatkan data')
+  })
+ }
+
+ const getDriver = () => {
+  axios.get('https://belanjalagiyuk.shop/drivers/count', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then((res) => {
+    setDriver(res?.data?.jumlah_petugas)
+  })
+  .catch(() => {
+    toast.error('Gagal mendapatkan data')
+  })
+ }
+
+  const getCase = () => {
+    axios.get('https://belanjalagiyuk.shop/emergencies/count', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then((res) => {
+      setCases(res?.data?.jumlah_kasus)
+    })
+    .catch(() => {
+      toast.error('Gagal mendapatkan data')
+    })
+  }
 
   return (
     <section>
@@ -41,17 +97,17 @@ const Dashboard = () => {
         <div className="flex flex-wrap gap-4">
           {role === "superadmin" ? (
             <>
-              <Card title="28 Unit" description="Rumah Sakit" img={medic} />
-              <Card title="17 Unit" description="Pemadam" img={fire} />
-              <Card title="40 Unit" description="Kepolisian" img={corps} />
-              <Card title="100 Unit" description="SAR" img={timsar} />
-              <Card title="2 Unit" description="Dishub" img={dishub} />
+              <Card title={unit.unit_rumah_sakit} description="Rumah Sakit" img={medic} />
+              <Card title={unit.unit_pemadam} description="Pemadam" img={fire} />
+              <Card title={unit.unit_kepolisian} description="Kepolisian" img={corps} />
+              <Card title={unit.unit_dishub} description="Dishub" img={dishub} />
+              <Card title={unit.unit_SAR} description="Sar" img={dishub} />
             </>
           ) : null}
           {role === "admin" ? (
             <>
-              <Card title="28" description="Kasus" img={dishub} />
-              <Card title="17" description="Petugas" img={dishub} />
+              <Card title={cases} description="Kasus" img={dishub} />
+              <Card title={driver} description="Petugas" img={dishub} />
             </>
           ) : null}
         </div>

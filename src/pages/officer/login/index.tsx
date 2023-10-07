@@ -7,6 +7,8 @@ import { validateLogin } from "../../../validate/auth";
 import toast from "react-hot-toast";
 import Cookie from "js-cookie";
 import axios from "axios";
+import logo from '../../../../public/loginBackground.png'
+import logoMain from '../../../../public/logo.png'
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ const LoginPage = () => {
       password: "",
     },
     validationSchema: validateLogin,
-    onSubmit: (values: any) => {
+    onSubmit: (values) => {
       axios
         .post("https://belanjalagiyuk.shop/drivers/login", {
           email: values.email,
@@ -53,8 +55,8 @@ const LoginPage = () => {
           <div className="flex flex-col md:place-items-center">
             <div>
               <img
-                src="../../../public/logo.png"
-                alt=""
+                src={logoMain}
+                alt="logo"
                 className="w-28 mb-3 md:block hidden"
               />
             </div>
@@ -111,7 +113,7 @@ const LoginPage = () => {
           </form>
           <div className="text-center">
             Belum punya akun?{" "}
-            <Link to="/register" className="text-red-500 hover:text-red-700">
+            <Link to="/register-petugas" className="text-red-500 hover:text-red-700">
               Daftar Disini
             </Link>
           </div>
@@ -119,7 +121,7 @@ const LoginPage = () => {
       </div>
       <div className="hidden lg:block w-[60vw] h-screen">
         <img
-          src="../../../public/loginBackground.png"
+          src={logo}
           alt=""
           className="h-screen"
         />

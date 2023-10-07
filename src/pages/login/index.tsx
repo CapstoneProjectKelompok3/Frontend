@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Input from "../../component/Input";
 import Button from "../../component/Button";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,17 +7,18 @@ import { validateLogin } from "../../validate/auth";
 import toast from "react-hot-toast";
 import Cookie from "js-cookie";
 import axios from "axios";
-
+import logo from '../../../public/logo.png'
+import banner from '../../../public/loginBackground.png'
 const LoginPage = () => {
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
     validationSchema: validateLogin,
-    onSubmit: (values: any) => {
+    onSubmit: (values) => {
       axios
         .post("https://api.flattenbot.site/users/login", {
           email: values.email,
@@ -74,7 +75,7 @@ const LoginPage = () => {
           <div className="flex flex-col md:place-items-center">
             <div>
               <img
-                src="../../../public/logo.png"
+                src={logo}
                 alt=""
                 className="w-28 mb-3 md:block hidden"
               />
@@ -121,6 +122,11 @@ const LoginPage = () => {
                   {formik.errors.password}
                 </div>
               ) : null}
+              <div className="text-end py-2">
+                <Link to="/forgot-password" className="text-red-500 hover:text-red-700">
+                  Lupa Kata Sandi?
+                </Link>
+              </div>
             </div>
             <div>
               <Button
@@ -136,11 +142,12 @@ const LoginPage = () => {
               Daftar Disini
             </Link>
           </div>
+
         </div>
       </div>
       <div className="hidden lg:block w-[60vw] h-screen">
         <img
-          src="../../../public/loginBackground.png"
+          src={banner}
           alt=""
           className="h-screen"
         />

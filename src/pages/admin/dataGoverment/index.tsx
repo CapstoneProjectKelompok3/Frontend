@@ -25,11 +25,12 @@ interface Gooverment {
   type: string;
 }
 
-const libraries = ["places"];
+const libraries: any = ["places"];
 
 const DataGoverment = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [modalDelete, setModalDelete] = useState(false);
   const [id, setId] = useState(0);
   const [gooverment, setGooverment] = useState<Gooverment[]>([]);
   const [address, setAddress] = useState<string>("Jl");
@@ -81,7 +82,10 @@ const DataGoverment = () => {
     }
   });
 
-  const handleMapClick = async (e) => {
+  useEffect(() => {
+    getDataGoverment();
+  }, []);
+  const handleMapClick = async (e: any) => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
     setSelected({ lat, lng });
@@ -149,7 +153,7 @@ const DataGoverment = () => {
   const getDataGoverment = async () => {
     try {
       const response = await axios.get(
-        `https://belanjalagiyuk.shop/governments?page=${page}`,
+        `https://belanjalagiyuk.shop/governments`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -656,8 +660,10 @@ const DataGoverment = () => {
     </section>
   );
 };
-
-const SearchMap = ({ setSelected }) => {
+interface SearchMap {
+  setSelected: any;
+}
+const SearchMap: React.FC<SearchMap> = ({ setSelected }) => {
   const {
     ready,
     value,
@@ -667,7 +673,7 @@ const SearchMap = ({ setSelected }) => {
   } = usePlacesAutocomplete();
   const [selectLocation, setSelectLocation] = useState<boolean>(false);
 
-  const handleInput = (e) => {
+  const handleInput = (e: any) => {
     setValue(e.target.value);
     setSelectLocation(false);
   };

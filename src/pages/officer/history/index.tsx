@@ -1,4 +1,3 @@
-import React from 'react'
 import Card from '../../../component/Card'
 import Cookie from "js-cookie";
 import { useEffect } from 'react'
@@ -41,7 +40,7 @@ const HistoryJob = () => {
           <div onClick={() => navigate('/riwayat-petugas')} className={`flex flex-col place-items-center ${pathname === '/riwayat-petugas' ? 'text-black fa-lg' : 'text-secondary'} `}>
             <i className="fa-solid fa-clock-rotate-left"></i>
           </div>
-          <div onClick={() => navigate('/profile')} className={`flex flex-col place-items-center ${pathname === '/profile' ? 'text-black fa-lg' : 'text-secondary'} `}>
+          <div onClick={() => navigate('/profile-petugas')} className={`flex flex-col place-items-center ${pathname === '/profile' ? 'text-black fa-lg' : 'text-secondary'} `}>
             <i className="fa-solid fa-user"></i>
           </div>
         </div>

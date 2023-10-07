@@ -1,7 +1,7 @@
-import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
-import Cookie from "js-cookie";
 import { useEffect, useState, useMemo } from "react";
-import { useNavigate } from "react-router";
+import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import Cookie from "js-cookie";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Button from "../../../component/Button";
 
@@ -18,15 +18,12 @@ const DragAndDropMarker = () => {
 };
 
 function Map() {
-  const [selected, setSelected] = useState<any>(null);
+  const [selected, setSelected] = useState<{ lat: number; lng: number } | null>();
   const token = Cookie.get("token");
   const navigate = useNavigate();
   const latitude = parseFloat(localStorage.getItem("userLatitude"));
   const longitude = parseFloat(localStorage.getItem("userLongitude"));
   const isConfirm = localStorage.getItem("isConfirm");
-  console.log(isConfirm);
-  
-
   const role = Cookie.get("role");
 
   useEffect(() => {
@@ -45,7 +42,7 @@ function Map() {
     if (isNaN(latitude) && isNaN(longitude)) {
       navigate("/beranda");
     }
-  });
+  }, [token, navigate]);
 
   const center = useMemo(() => {
     if (selected) {
@@ -53,9 +50,9 @@ function Map() {
     } else {
       return { lat: latitude, lng: longitude };
     }
-  }, [selected]);
+  }, [selected, latitude, longitude]);
 
-  const handleMapClick = async (e) => {
+  const handleMapClick = async (e: any) => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
     setSelected({ lat, lng });
@@ -84,12 +81,9 @@ function Map() {
         onClick={handleMapClick}
       >
         {selected ? (
-          <MarkerF position={selected} draggable={true} />
+          <Marker position={selected} draggable={true} />
         ) : (
-          <MarkerF
-            position={{ lat: latitude, lng: longitude }}
-            draggable={true}
-          />
+          <Marker position={{ lat: latitude, lng: longitude }} draggable={true} />
         )}
       </GoogleMap>
       {isConfirm === 'false' ? (

@@ -1,43 +1,83 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Input from "../../../component/Input";
 import Button from "../../../component/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { validateRegister } from "../../../validate/auth";
+import { validateRegisterOffice } from "../../../validate/auth";
 import axios from "axios";
 import Cookie from "js-cookie";
 import toast from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
+  const token = Cookie.get("token");
+  const [data, setData] = useState<any>([]);
+  const defaultVehicle = data[0];
+  const [latitude, setLatitude] = useState<any>()
+  const [longitude, setLongitude] = useState<any>()
+
+  const getVehicle = () => {
+    axios
+      .get("https://belanjalagiyuk.shop/vehicles", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setData(res?.data?.data);
+      })
+      .catch(() => toast.error("Gagal mendapatkan kendaraan"));
+  };
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      setLatitude(position.coords.latitude)
+      setLongitude(position.coords.longitude)
+    });
+  }, []);
+
+  useEffect(() => {
+    getVehicle();
+  }, []);
 
   const formik = useFormik({
     initialValues: {
+      fullname: "",
       email: "",
-      username: "",
-      nik: "",
       password: "",
+      vehicle: " ",
+      government_id: " ",
+      latitude: " ",
+      longitude: " ",
     },
-    validationSchema: validateRegister,
+    validationSchema: validateRegisterOffice,
     onSubmit: (values: any) => {
+      values.vehicle = defaultVehicle.id;
+      values.government_id = defaultVehicle.goverment_id      ,
+      values.latitude = latitude
+      values.longitude = longitude
+
       axios
         .post("https://belanjalagiyuk.shop/drivers", {
           email: values.email,
-          username: values.username,
-          nik: values.nik,
+          fullname: values.fullname,
+          vehicle_id: values.vehicle,
           password: values.password,
+          government_id: values.government_id,
+          latitude: values.latitude,
+          longitude: values.longitude
         })
         .then((res) => {
-          toast.success('Daftar Akun Berhasil')
-          navigate('/login-petugas')
+          toast.success("Daftar Akun Berhasil");
+          navigate("/login-petugas");
         })
         .catch((err) => {
           if (err.response.data.status_code === 400) {
-            toast.error('Silahkan Periksa Ulang')
+            toast.error("Silahkan Periksa Ulang");
           } else {
-            toast.error('Server tidak merespon. Mohon coba lagi nanti')
+            toast.error("Server tidak merespon. Mohon coba lagi nanti");
           }
-        })
+        });
     },
   });
 
@@ -60,35 +100,18 @@ const Register = () => {
             <form onSubmit={formik.handleSubmit}>
               <div>
                 <Input
-                  placeholder="Masukkan Username"
-                  label="Username"
-                  name="username"
+                  placeholder="Masukkan Fullname"
+                  label="Fullname"
+                  name="fullname"
                   type="text"
                   className="w-full"
                   icon={<i className="fa-solid fa-user"></i>}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
-                {formik.touched.username && formik.errors.username ? (
+                {formik.touched.fullname && formik.errors.fullname ? (
                   <div className="text-red-500 focus:outline-red-500 text-sm font-semibold">
-                    {formik.errors.username}
-                  </div>
-                ) : null}
-              </div>
-              <div>
-                <Input
-                  placeholder="123141213123"
-                  label="NIK"
-                  type="text"
-                  name="nik"
-                  icon={<i className="fa-solid fa-address-card"></i>}
-                  className="w-full"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.nik && formik.errors.nik ? (
-                  <div className="text-red-500 focus:outline-red-500 text-sm font-semibold">
-                    {formik.errors.nik}
+                    {formik.errors.fullname}
                   </div>
                 ) : null}
               </div>
@@ -127,6 +150,24 @@ const Register = () => {
                 ) : null}
               </div>
               <div>
+                <label className="text-secondary">Kendaraan</label>
+                <select
+                  className="border-b border-line w-full bg-transparent py-2 focus:border-b focus:border-line overflow-y-scroll"
+                  name="vehicle"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                >
+                  {data &&
+                    data.map((item, index) => {
+                      return (
+                        <option value={item.id} key={index}>
+                          {item.plate}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+              <div>
                 <Button
                   label="Daftar"
                   type="submit"
@@ -136,7 +177,10 @@ const Register = () => {
             </form>
             <div className="text-center">
               Sudah punya akun?{" "}
-              <Link to="/login" className="text-red-500 hover:text-red-700">
+              <Link
+                to="/login-petugas"
+                className="text-red-500 hover:text-red-700"
+              >
                 Masuk Disini
               </Link>
             </div>
