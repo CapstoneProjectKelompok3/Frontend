@@ -28,18 +28,35 @@ interface Gooverment {
 const libraries: any = ["places"];
 
 const DataGoverment = () => {
-  const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
   const [modalDelete, setModalDelete] = useState(false);
   const [id, setId] = useState(0);
   const [gooverment, setGooverment] = useState<Gooverment[]>([]);
   const [address, setAddress] = useState<string>("Jl");
   const gmapsApi = "AIzaSyBlU8Tj6O7eJD-49jUXxLQNIC6pyKzInFY";
   const [selected, setSelected] = useState<any>({ lat: -6.2, lng: 106.816666 });
+
   const navigate = useNavigate();
+
   const token = Cookie.get("token");
   const role = Cookie.get("role");
-  console.log(edit, modalDelete, id)
+
+  const [openModal, setOpenModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+
+  const [updateData, setUpdateData] = useState<any>([]);
+
+  const option = ["hospital", "dishub", "firestation", "police", "SAR"];
+  const hos = updateData.type ? updateData.type : "";
+  const unSelectOption = option.filter((item) => !hos.includes(item));
+
+  const [selectedUpdate, setSelectedUpdate] = useState<any>({
+    lat: updateData.latitude,
+    lng: updateData.longitude,
+  });
+  const [selectedAddress, setSelectedAddress] = useState<any>();
+
   const center = useMemo(() => {
     if (selected) {
       return { lat: selected.lat, lng: selected.lng };
@@ -66,12 +83,18 @@ const DataGoverment = () => {
   });
 
   useEffect(() => {
-    getDataGoverment()
-  }, [])
+    getDataGoverment();
+  }, []);
   const handleMapClick = async (e: any) => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
     setSelected({ lat, lng });
+  };
+
+  const handleUpdateMapClick = async (e) => {
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    setSelectedUpdate({ lat, lng });
   };
 
   const getAddress = async (lat: number, lng: number) => {
@@ -91,9 +114,32 @@ const DataGoverment = () => {
     }
   };
 
+  const getUpdateAddress = async (lat: number, lng: number) => {
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${gmapsApi}`
+      );
+
+      if (response.data.status === "OK" && response.data.results.length > 0) {
+        const formattedAddress = response.data.results[0].formatted_address;
+        setSelectedAddress(formattedAddress);
+      } else {
+        toast.error("Alamat Tidak ditemukan");
+      }
+    } catch (err) {
+      toast.error("Gagal mengambil alamat");
+    }
+  };
+
   useEffect(() => {
     getAddress(selected.lat, selected.lng);
   }, [selected]);
+
+  useEffect(() => {
+    if (selectedUpdate.lat) {
+      getUpdateAddress(selectedUpdate.lat, selectedUpdate.lng);
+    }
+  }, [selectedUpdate]);
 
   useEffect(() => {
     if (!token) {
@@ -119,34 +165,38 @@ const DataGoverment = () => {
       console.log(error);
     }
   };
-  // const handleDelete = async () => {
-  //   try {
-  //     const response = await axios.delete(
-  //       `https://belanjalagiyuk.shop/governments/${id}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     setModalDelete(false);
-  //     getDataGoverment();
-  //     toast.success(response.data.message);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `https://belanjalagiyuk.shop/governments/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setOpenModal(false);
+      getDataGoverment();
+      toast.success("Berhasil Menghapus");
+    } catch (error) {
+      toast.error("Gagal menghapus Goverment");
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       name: "",
-      type: "rumah sakit",
-      jumlah_unit: 0,
-      address: address,
-      latitude: "",
-      longitude: "",
+      type: "hospital",
+      address: " ",
+      latitude: " ",
+      longitude: " ",
     },
     validationSchema: validateGooverment,
     onSubmit: (values) => {
+      values.address = address;
+      values.latitude = selected.lat;
+      values.longitude = selected.lng;
       axios
         .post(
           `https://belanjalagiyuk.shop/governments`,
@@ -154,6 +204,8 @@ const DataGoverment = () => {
             name: values.name,
             type: values.type,
             address: values.address,
+            latitude: values.latitude,
+            longitude: values.longitude,
           },
           {
             headers: {
@@ -162,16 +214,82 @@ const DataGoverment = () => {
           }
         )
         .then((response) => {
-          toast.success(response.data.message);
+          toast.success("Berhasil menambahkan Goverment");
           setOpen(false);
           getDataGoverment();
         })
         .catch((error) => {
-          console.log(error.response);
           toast.error(error.response.data.message);
         });
     },
   });
+
+  const updateFormik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      name: updateData.name,
+      type: updateData.type,
+      address: " ",
+      latitude: " ",
+      longitude: " ",
+    },
+    validationSchema: validateGooverment,
+    onSubmit: (values) => {
+      values.latitude = selectedUpdate.lat;
+      values.longitude = selectedUpdate.lng;
+      values.address = selectedAddress;
+      axios
+        .put(
+          `https://belanjalagiyuk.shop/governments/${id}`,
+          {
+            name: values.name,
+            type: values.type,
+            address: values.address,
+            latitude: values.latitude,
+            longitude: values.longitude,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          toast.success("Berhasil mengupdate Goverment");
+          setEditModal(false);
+          getDataGoverment();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    },
+  });
+
+  const getUpdateData = (id: number) => {
+    setEditModal(!editModal);
+    setId(id);
+
+    axios
+      .get(`https://belanjalagiyuk.shop/governments/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setUpdateData(res?.data?.data);
+        setSelectedUpdate({
+          lat: res?.data?.data?.latitude,
+          lng: res?.data?.data?.longitude,
+        });
+      })
+      .catch(() => {
+        toast.error("Gagal mendapatkan data");
+      });
+  };
+
+  useEffect(() => {
+    getDataGoverment();
+  }, []);
 
   const rootElement = document.documentElement;
   rootElement.style.backgroundColor = "#FAFAFA";
@@ -181,7 +299,12 @@ const DataGoverment = () => {
     libraries: libraries,
   });
 
-  if (!isLoaded) return <div>Loading</div>;
+  if (!isLoaded)
+    return (
+      <div>
+        <iframe src="https://lottie.host/?file=020e0523-54f0-4c46-8272-c09f4e1acd98/vP29CkhiUp.json"></iframe>
+      </div>
+    );
 
   return (
     <section>
@@ -216,39 +339,41 @@ const DataGoverment = () => {
               </thead>
               <tbody>
                 {gooverment && gooverment.length > 0 ? (
-                  gooverment.map((element, index) => (
-                    <tr
-                      key={index}
-                      className="bg-gray-300-200 items-center border-none font-medium"
-                    >
-                      <td>
-                        <div>{index + 1}</div>
-                      </td>
-                      <td>{element.name}</td>
-                      <td>{element.type}</td>
-                      <td>{element.address}</td>
-                      <td>
-                        <div className="flex gap-7">
-                          <div
-                            onClick={() => {
-                              setEdit(true), setId(element.id);
-                            }}
-                            className="cursor-pointer hover:text-primary"
-                          >
-                            <i className="fa-solid fa-pen-to-square text-md"></i>
+                  gooverment.map((element, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="bg-gray-300-200 items-center border-none font-medium"
+                      >
+                        <td>
+                          <div>{index + 1}</div>
+                        </td>
+                        <td>{element.name}</td>
+                        <td className="uppercase">{element.type}</td>
+                        <td>{element.address}</td>
+                        <td>
+                          <div className="flex gap-7">
+                            <div
+                              onClick={() => {
+                                getUpdateData(element.id);
+                              }}
+                              className="cursor-pointer hover:text-primary"
+                            >
+                              <i className="fa-solid fa-pen-to-square text-md"></i>
+                            </div>
+                            <div
+                              onClick={() => {
+                                setOpenModal(true), setId(element.id);
+                              }}
+                              className="cursor-pointer hover:text-primary"
+                            >
+                              <i className="fa-solid fa-trash text-md"></i>
+                            </div>
                           </div>
-                          <div
-                            onClick={() => {
-                              setModalDelete(true), setId(element.id);
-                            }}
-                            className="cursor-pointer hover:text-primary"
-                          >
-                            <i className="fa-solid fa-trash text-md"></i>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr className="border-b-0">
                     <td colSpan={6} className="text-center font-semibold">
@@ -260,6 +385,25 @@ const DataGoverment = () => {
             </table>
           </div>
         </div>
+        {openModal && (
+          <Popup onConfirm={() => setOpenModal(false)}>
+            <div className="relative h-56 bg-white rounded-lg shadow">
+              <div className="px-10 py-10 flex flex-col space-y-3 ">
+                <div className="space-y-2 flex flex-col justify-center items-center">
+                  <h3 className="text-xl text-center font-bold text-black">
+                    Hapus Data
+                  </h3>
+                  <p className="text-md text-center">
+                    Apakah Anda Yakin ingin Menghapus Data ini ?
+                  </p>
+                </div>
+              </div>
+              <div className="px-10 flex justify-end">
+                <Button onClick={() => handleDelete()} label="Oke" />
+              </div>
+            </div>
+          </Popup>
+        )}
         {open && (
           <Popup onConfirm={() => setOpen(false)}>
             <div className="relative w-full">
@@ -296,10 +440,11 @@ const DataGoverment = () => {
                           name="type"
                           className="select select-bordered bg-white text-secondary p-2 font-medium w-full select-md"
                         >
-                          <option value={"rumah sakit"}>Rumah Sakit</option>
+                          <option value={"hospital"}>Rumah Sakit</option>
                           <option value={"dishub"}>Dishub</option>
-                          <option value={"damkar"}>Damkar</option>
-                          <option value={"polisi"}>Polisi</option>
+                          <option value={"firestation"}>Damkar</option>
+                          <option value={"police"}>Polisi</option>
+                          <option value={"SAR"}>SAR</option>
                         </select>
                       </div>
                     </div>
@@ -354,36 +499,21 @@ const DataGoverment = () => {
                         <div>{selected.lng}</div>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-x-5">
+                    <div>
                       <div>
                         <label className="block py-1 text-sm font-medium text-black">
                           Alamat <span className="text-primary">*</span>
                         </label>
                         <div>{address}</div>
                       </div>
-                      <div>
-                        <label className="block py-1 text-sm font-medium text-black">
-                          Jumlah Unit
-                          <span className="text-primary">*</span>
-                        </label>
-                        <Input
-                          placeholder="Masukkan Jumlah Unit"
-                          className="px-2 py-3 w-full"
-                          name="jumlah_unit"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
-                        {formik.touched.jumlah_unit &&
-                          formik.errors.jumlah_unit ? (
-                          <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
-                            {formik.errors.jumlah_unit}
-                          </div>
-                        ) : null}
-                      </div>
                     </div>
 
                     <div className="py-2">
-                      <Button type="submit" label="Tambahkan" />
+                      <Button
+                        type="submit"
+                        label="Tambahkan"
+                        className="w-full"
+                      />
                     </div>
                   </form>
                 </div>
@@ -391,62 +521,147 @@ const DataGoverment = () => {
             </div>
           </Popup>
         )}
-        {/* {edit && (
-          <Popup onConfirm={handleEditClose}>
-            <div className="relative w-full max-w-md max-h-full">
-              <div className="relative w-96 bg-white rounded-lg shadow">
+        {editModal && (
+          <Popup onConfirm={() => setEditModal(false)}>
+            <div className="relative w-full">
+              <div className="relative w-[80vw] h-fit bg-white rounded-lg shadow">
                 <div className="px-6 py-6 lg:px-8">
                   <div className="mb-4 text-xl text-center font-bold text-black">
                     Edit Goverment
                   </div>
-                  <form className="space-y-4" action="#">
-                    <div>
-                      <label className="block py-1 text-sm font-medium text-black">
-                        Nama <span className="text-primary">*</span>
-                      </label>
-                      <Input
-                        placeholder="Masukkan Nama Goverment"
-                        className="p-3 w-full"
-                      />
+                  <form
+                    onSubmit={updateFormik.handleSubmit}
+                    className="space-y-4"
+                  >
+                    <div className="grid grid-cols-2 gap-5">
+                      <div>
+                        <label className="block py-1 text-sm font-medium text-black">
+                          Nama <span className="text-primary">*</span>
+                        </label>
+                        <Input
+                          onChange={updateFormik.handleChange}
+                          onBlur={updateFormik.handleBlur}
+                          name="name"
+                          placeholder="Masukkan Nama Goverment"
+                          className="p-3 w-full"
+                          value={updateFormik.values.name}
+                        />
+                        {updateFormik.touched.name &&
+                        updateFormik.errors.name ? (
+                          <div className="text-red-500 focus:outline-red-500 text-sm font-semibold py-2">
+                            {updateFormik.errors.name}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div>
+                        <label className="block py-1 text-sm font-medium text-black">
+                          Type <span className="text-primary">*</span>
+                        </label>
+                        <select
+                          onChange={updateFormik.handleChange}
+                          onBlur={updateFormik.handleBlur}
+                          name="type"
+                          className="select select-bordered bg-white text-secondary p-2 font-medium w-full select-md"
+                        >
+                          <option
+                            value={updateData.type}
+                            className="capitalize"
+                          >
+                            {updateData.type}
+                          </option>
+                          {unSelectOption &&
+                            unSelectOption.map((item, index: number) => {
+                              return (
+                                <option
+                                  value={item}
+                                  className="capitalize"
+                                  key={index}
+                                >
+                                  {item}
+                                </option>
+                              );
+                            })}
+                        </select>
+                      </div>
                     </div>
                     <div>
-                      <label className="block py-1 text-sm font-medium text-black">
-                        Type <span className="text-primary">*</span>
-                      </label>
-                      <select className="select select-bordered bg-white text-secondary p-2 font-medium w-full select-md">
-                        <option disabled selected>
-                          Pilih Type
-                        </option>
-                        <option>Rumah Sakit</option>
-                        <option>Dishub</option>
-                        <option>Damkar</option>
-                        <option>Polisi</option>
-                      </select>
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "30vh",
+                          position: "relative",
+                        }}
+                      >
+                        <div>
+                          <SearchMap setSelected={setSelectedUpdate} />
+                        </div>
+
+                        <GoogleMap
+                          mapContainerStyle={{
+                            width: "100%",
+                            height: "30vh",
+                            position: "static",
+                          }}
+                          center={{
+                            lat: selectedUpdate.lat,
+                            lng: selectedUpdate.lng,
+                          }}
+                          zoom={15}
+                          onClick={handleUpdateMapClick}
+                        >
+                          {selectedUpdate && (
+                            <MarkerF
+                              position={
+                                selectedUpdate
+                                  ? selectedUpdate
+                                  : { lat: -6.2, lng: 106.816666 }
+                              }
+                              draggable={true}
+                            ></MarkerF>
+                          )}
+                        </GoogleMap>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-5">
+                      <div>
+                        <label className="block py-1 text-sm font-medium text-black">
+                          Koordinat Latitude{" "}
+                          <span className="text-primary">*</span>
+                        </label>
+                        <div>{selectedUpdate.lat}</div>
+                      </div>
+                      <div>
+                        <label className="block py-1 text-sm font-medium text-black">
+                          Koordinat Longitude{" "}
+                          <span className="text-primary">*</span>
+                        </label>
+                        <div>{selectedUpdate.lng}</div>
+                      </div>
                     </div>
                     <div>
-                      <label className="block py-1 text-sm font-medium text-black">
-                        Alamat <span className="text-primary">*</span>
-                      </label>
-                      <Input
-                        placeholder="Masukkan Alamat Goverment"
-                        className="p-3 w-full"
-                      />
+                      <div>
+                        <label className="block py-1 text-sm font-medium text-black">
+                          Alamat <span className="text-primary">*</span>
+                        </label>
+                        <div>{selectedAddress}</div>
+                      </div>
                     </div>
+
                     <div className="py-2">
-                      <Button onClick={handleclick} label="Tambahkan" />
+                      <Button type="submit" label="Update" className="w-full" />
                     </div>
                   </form>
                 </div>
               </div>
             </div>
           </Popup>
-        )} */}
+        )}
       </div>
     </section>
   );
 };
 interface SearchMap {
-  setSelected: any
+  setSelected: any;
 }
 const SearchMap: React.FC<SearchMap> = ({ setSelected }) => {
   const {
@@ -487,8 +702,9 @@ const SearchMap: React.FC<SearchMap> = ({ setSelected }) => {
           className="w-52 h-8 bg-white mx-auto text-sm"
         />
         <div
-          className={`overflow-y-auto h-36 rounded-md mt-2 ${value === "" || selectLocation === true ? "hidden" : ""
-            }`}
+          className={`overflow-y-auto h-36 rounded-md mt-2 ${
+            value === "" || selectLocation === true ? "hidden" : ""
+          }`}
         >
           {status === "OK" &&
             data.map(({ place_id, description }) => (

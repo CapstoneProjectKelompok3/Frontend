@@ -23,7 +23,7 @@ const LandingPage = () => {
         toast.error("Silahkan Login Terlebih Dahulu");
       }, 200);
     }
-    if (role === "admin" || role === "superadmin") {
+    if (role !== "user") {
       navigate("/dashboard");
     }
   }, []);
@@ -48,26 +48,26 @@ const LandingPage = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          localStorage.setItem("userLatitude", latitude.toString());
-          localStorage.setItem("userLongitude", longitude.toString());
-          axios.post(
-            `https://api.flattenbot.site/message/newmessage`,
-            {
-              message: transcript,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
+          localStorage.setItem("userLatitude", latitude);
+          localStorage.setItem("userLongitude", longitude);
+          localStorage.setItem("isConfirm", false);
+          navigate("/lokasi");
+          axios
+            .post(
+              `https://api.flattenbot.site/message/newmessage`,
+              {
+                message: transcript,
               },
-            }
-          )
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
             .then((response) => {
               console.log(response.data);
               Cookie.set("roomid", response.data.room);
-              navigate('/lokasi')
-              // navigate("/chat", {
-              //   state: response.data.admin,
-              // });
+              navigate("/lokasi");
             })
             .catch((error: any) => {
               console.log(error);
@@ -77,6 +77,7 @@ const LandingPage = () => {
           toast.error("Gagal mendapatkan lokasi");
         }
       );
+      // axios.post(``)
     }, 1500);
   };
 
@@ -133,22 +134,25 @@ const LandingPage = () => {
         <div className="flex flex-row justify-between place-items-center h-full px-5">
           <div
             onClick={() => navigate("/beranda")}
-            className={`flex flex-col place-items-center ${pathname === "/beranda" ? "text-black fa-lg" : "text-secondary"
-              } `}
+            className={`flex flex-col place-items-center ${
+              pathname === "/beranda" ? "text-black fa-lg" : "text-secondary"
+            } `}
           >
             <i className="fa-solid fa-house"></i>
           </div>
           <div
             onClick={() => navigate("/riwayat")}
-            className={`flex flex-col place-items-center ${pathname === "/riwayat" ? "text-black fa-lg" : "text-secondary"
-              } `}
+            className={`flex flex-col place-items-center ${
+              pathname === "/riwayat" ? "text-black fa-lg" : "text-secondary"
+            } `}
           >
             <i className="fa-solid fa-clock-rotate-left"></i>
           </div>
           <div
             onClick={() => navigate("/profile")}
-            className={`flex flex-col place-items-center ${pathname === "/profile" ? "text-black fa-lg" : "text-secondary"
-              } `}
+            className={`flex flex-col place-items-center ${
+              pathname === "/profile" ? "text-black fa-lg" : "text-secondary"
+            } `}
           >
             <i className="fa-solid fa-user"></i>
           </div>

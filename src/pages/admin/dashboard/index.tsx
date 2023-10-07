@@ -15,11 +15,9 @@ const Dashboard = () => {
   const role = Cookie.get("role");
   const token = Cookie.get("token");
   const navigate = useNavigate()
-  const [driver, setDriver] = useState([])
-  const [dis, setDis] = useState<number>(0)
-  const [polisi, setPolisi] = useState<number>(0)
-  const [rs, setRs] = useState<number>(0)
-  const [damkar, setDamkar] = useState<number>(0)
+  const [unit, setUnit] = useState<any>([])
+  const [cases, setCases] = useState<number>(0)
+  const [driver, setDriver] = useState<number>(0)
 
   useEffect(() => {
     if (!token) {
@@ -29,55 +27,68 @@ const Dashboard = () => {
       }, 200);
     }
   }, [])
+  
   useEffect(() => {
     if (role === 'user') {
       navigate('/beranda')
     }
   })
+
   useEffect(() => {
-    getAllDriver()
-    getAllGooverment()
+    if(role === 'superadmin') {
+      getUnit()
+    }
+    if (role === 'admin') {
+      getCase()
+      getDriver()
+    }
   }, [])
 
   const rootElement = document.documentElement;
   rootElement.style.backgroundColor = "#FAFAFA";
 
-  const getAllDriver = async () => {
-    try {
-      const response = await axios.get(`https://belanjalagiyuk.shop/drivers`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      setDriver(response.data.data)
-    } catch (error) {
-      console.log(error)
+ const getUnit = () => {
+  axios.get('https://belanjalagiyuk.shop/governments/count', {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
+  })
+  .then((res) => {
+    setUnit(res?.data?.data)
+  })
+  .catch(() => {
+    toast.error('Gagal mendapatkan data')
+  })
+ }
+
+ const getDriver = () => {
+  axios.get('https://belanjalagiyuk.shop/drivers/count', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then((res) => {
+    setDriver(res?.data?.jumlah_petugas)
+  })
+  .catch(() => {
+    toast.error('Gagal mendapatkan data')
+  })
+ }
+
+  const getCase = () => {
+    axios.get('https://belanjalagiyuk.shop/emergencies/count', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then((res) => {
+      setCases(res?.data?.jumlah_kasus)
+    })
+    .catch(() => {
+      toast.error('Gagal mendapatkan data')
+    })
   }
 
-  const getAllGooverment = async () => {
-    try {
-      const response = await axios.get(
-        `https://belanjalagiyuk.shop/governments`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response.data)
-      const dishubCount: number = response.data.data.filter((item: any) => item.type === 'dishub').length;
-      setDis(dishubCount);
-      const polisiCount: number = response.data.data.filter((item: any) => item.type === 'police').length;
-      setPolisi(polisiCount);
-      const rsCount: number = response.data.data.filter((item: any) => item.type === 'hospital').length;
-      setRs(rsCount);
-      const damkarCount: number = response.data.data.filter((item: any) => item.type === 'firestation').length;
-      setDamkar(damkarCount);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <section>
       <Navbar />
@@ -86,16 +97,17 @@ const Dashboard = () => {
         <div className="flex flex-wrap gap-4">
           {role === "superadmin" ? (
             <>
-              <Card title={rs} description="Rumah Sakit" img={medic} />
-              <Card title={damkar} description="Pemadam" img={fire} />
-              <Card title={polisi} description="Kepolisian" img={corps} />
-              <Card title={dis} description="Dishub" img={dishub} />
+              <Card title={unit.unit_rumah_sakit} description="Rumah Sakit" img={medic} />
+              <Card title={unit.unit_pemadam} description="Pemadam" img={fire} />
+              <Card title={unit.unit_kepolisian} description="Kepolisian" img={corps} />
+              <Card title={unit.unit_dishub} description="Dishub" img={dishub} />
+              <Card title={unit.unit_SAR} description="Sar" img={dishub} />
             </>
           ) : null}
           {role === "admin" ? (
             <>
-              <Card title="28" description="Kasus" img={dishub} />
-              <Card title={driver.length} description="Petugas" img={dishub} />
+              <Card title={cases} description="Kasus" img={dishub} />
+              <Card title={driver} description="Petugas" img={dishub} />
             </>
           ) : null}
         </div>

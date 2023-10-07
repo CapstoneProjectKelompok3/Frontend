@@ -88,14 +88,12 @@ const DataUser = () => {
                 },
             })
             .then((response) => {
-                console.log(response);
+                toast.success('Data Berhasil diVerify')
                 setOpenModalverif(false);
                 getDataUser();
             })
             .catch((error) => {
-                console.log("gagal")
-                console.log(error.response)
-                toast.error(error.response.data.message);
+                toast.error('Data Gagal diVerify');
             });
     };
 
