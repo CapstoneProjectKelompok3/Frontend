@@ -109,12 +109,12 @@ const Profile = () => {
     localStorage.removeItem('userLongitude');
     localStorage.removeItem('speach-text');
 
-    navigate("/login");
+    navigate("/login-petugas");
     toast.success("Berhasil Logout");
   };
   useEffect(() => {
     if (!token) {
-      navigate('/login')
+      navigate('/login-petugas')
       setTimeout(() => {
         toast.error("Silahkan Login Terlebih Dahulu")
       }, 200);
