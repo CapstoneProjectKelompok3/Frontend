@@ -16,6 +16,8 @@ const DetailJob = () => {
   } | null>();
 
   const [directions, setDirections] = useState(null);
+  const [isArrived, setIsArrived] = useState(false);
+  const [status, setStatus] = useState("Terima");
   const [confirm, setConfirm] = useState<boolean>(true);
   const [reason, setReason] = useState<boolean>(false);
   const [done, setDone] = useState<boolean>(false);
@@ -26,6 +28,8 @@ const DetailJob = () => {
     lat: dataEmergency.latitude,
     lng: dataEmergency.longitude,
   };
+
+
 
   const requestDirections=() => {
     const directionsService = new window.google.maps.DirectionsService();
@@ -45,18 +49,52 @@ const DetailJob = () => {
       }
     );
 
-    console.log('Current Directions',directions)
-
-    intervalId()
   }
 
-  const intervalId = setInterval(() => {
-    const path = directions?.routes[0]?.overview_path; // Ambil jalur rute
+  const requestDirectionsJalan=() => {
+    const directionsService = new window.google.maps.DirectionsService();
 
-    if (path && path.length > 0) {
-      setCurrentPosition(path.shift()); // Geser posisi marker ke titik berikutnya di jalur
-    }
-  }, 300);
+    directionsService.route(
+      {
+        origin: {lat: data.latitude, lng: data.longitude},
+        destination: locationTarget,
+        travelMode: 'DRIVING', // Anda dapat mengganti mode perjalanan sesuai kebutuhan (e.g., DRIVING, WALKING)
+      },
+      (result, status) => {
+        if (status === 'OK') {
+          setDirections(result);
+        } else {
+          console.error(`Error fetching directions: ${status}`);
+        }
+      }
+    );
+  // intervalId
+  // console.log("CURR POSITION",currentPosition)
+    // console.log('Current Directions',directions)
+    // const timerId = setTimeout(() => {
+    //   setIsArrived(true);
+    // }, 3000); // Waktu dalam milidetik (3 detik)
+    // console.log("tiba",isArrived)
+    // // Bersihkan timer saat komponen unmount atau waktu perubahan
+    // return () => clearTimeout(timerId);
+
+    setInterval(() => {
+      const path = directions?.routes[0]?.overview_path; // Ambil jalur rute
+    
+      if (path && path.length > 0) {
+     
+        setCurrentPosition(path.shift()); // Geser posisi marker ke titik berikutnya di jalur
+        
+        // console.log("PATH",path)
+        if(path && path.length===0){
+          setIsArrived(true)
+        }
+      }
+      
+    }, 120)
+  }
+
+ 
 
   const getData = () => {
     axios
@@ -83,6 +121,7 @@ const DetailJob = () => {
           },
         }
       );
+      console.log(response.data,"emergency")
       setDataEmergency(response?.data?.data);
     } catch (error) {
       toast.error("Gagal mendapatkan data");
@@ -114,12 +153,23 @@ const DetailJob = () => {
       )
       .then((res) => {
         requestDirections()
+        setStatus("Jalan")
+        // setDone(true);
+        // setConfirm(false);
+      })
+      .catch((err) => {
+        console.log(err)
+        toast.error(err.message);
+      });
+  };
+
+ 
+
+  const jalan = () => {
+        requestDirectionsJalan()
+        setStatus("Berangkat")
         setDone(true);
         setConfirm(false);
-      })
-      .catch(() => {
-        toast.error("Gagal menerima pekerjaan");
-      });
   };
 
   const rejectJob = () => {
@@ -164,6 +214,7 @@ const DetailJob = () => {
         toast.error("Gagal menyelesaikan tugas");
       });
   };
+  
 
   useEffect(() => {
     if (!token) {
@@ -221,13 +272,13 @@ const DetailJob = () => {
         onClick={handleMapClick}
       >
         {directions && <DirectionsRenderer directions={directions} />}
-        {currentPosition && <MarkerF position={currentPosition} label="Current Position" />}
+        {status==="Berangkat" &&currentPosition && <MarkerF position={currentPosition} label="Current Position" />}
       </GoogleMap>
       {confirm === true ? (
         <div className="absolute bottom-0 w-full bg-white text-center px-3 py-5 rounded-tr-2xl rounded-tl-2xl">
-          <div className="font-semibold">Detail Laporan</div>
+          <div className="font-semibold">Detail Laporan {data?.emergency_name}</div>
           <div className="text-sm text-justify px-2">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
+          <b>{data?.emergency_name}</b> Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
             and scrambled.
@@ -240,7 +291,28 @@ const DetailJob = () => {
                 setReason(true), setConfirm(false);
               }}
             />
-            <Button label="Terima" onClick={() => confirmJob()} />
+            <Button label={status} onClick={() => confirmJob()} />
+          </div>
+        </div>
+      ) : null}
+      {status === "Jalan" ? (
+        <div className="absolute bottom-0 w-full bg-white text-center px-3 py-5 rounded-tr-2xl rounded-tl-2xl">
+          <div className="font-semibold">Detail Laporan {data?.emergency_name}</div>
+          <div className="text-sm text-justify px-2">
+          <b>{data?.emergency_name}</b> Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled.
+          </div>
+          <div className="flex flex-row justify-between px-6 py-2">
+            {/* <Button
+              label="Tolak"
+              className="bg-secondary focus:bg-secondary border-secondary outline-secondary"
+              onClick={() => {
+                setReason(true), setConfirm(false);
+              }}
+            /> */}
+            <Button  label={status} onClick={() => jalan()} className="w-11/12" />
           </div>
         </div>
       ) : null}
@@ -270,16 +342,18 @@ const DetailJob = () => {
       ) : null}
       {done === true ? (
         <div className="absolute bottom-0 w-full bg-white text-center px-3 py-5 rounded-tr-2xl rounded-tl-2xl">
-          <div className="font-semibold">Detail Laporan</div>
+          <div className="font-semibold">Detail Laporan {data?.emergency_name}</div>
           <div className="text-sm text-justify px-2">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
+            <b>{data?.emergency_name}</b> Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
             and scrambled.
           </div>
-          <div className=" mt-2 w-full text-end">
-            <Button label="Selesai" onClick={() => confirmDone()} />
-          </div>
+      {
+        isArrived &&(    <div className=" mt-2 w-full text-end">
+        <Button label="Selesai" onClick={() => confirmDone()} />
+      </div>)
+      }
         </div>
       ) : null}
     </div>
