@@ -127,13 +127,13 @@ const DetailJob = () => {
           </div>
           <div className="flex flex-row justify-between px-6 py-2">
             <Button
-              label="Cancel"
+              label="Tolak"
               className="bg-secondary focus:bg-secondary border-secondary outline-secondary"
               onClick={() => {
                 setReason(true), setConfirm(false);
               }}
             />
-            <Button label="Next" onClick={() => confirmJob()} />
+            <Button label="Terima" onClick={() => confirmJob()} />
           </div>
         </div>
       ) : null}
