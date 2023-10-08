@@ -68,8 +68,9 @@ const LandingPage = () => {
             )
             .then((response) => {
               console.log(response.data);
-              // Cookie.set("roomid", response.data.room);
-              // navigate("/lokasi");
+              Cookie.set("roomid", response.data.room);
+              Cookie.set("admin", response.data.admin);
+              navigate("/lokasi");
             })
             .catch((error: any) => {
               console.log(error.response);
