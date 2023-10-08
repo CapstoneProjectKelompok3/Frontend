@@ -20,6 +20,8 @@ const Profile = () => {
   const [data, setData] = useState({
     username: '',
     email: '',
+    fullname:'',
+    goverment_name:"",
     document: {
       fullname: '',
       gender: '',
@@ -43,6 +45,7 @@ const Profile = () => {
         username: values.username,
         fullname: values.fullname,
         gender: values.gender,
+    
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -86,7 +89,7 @@ const Profile = () => {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`https://api.flattenbot.site/users/${id}`, {
+      const response = await axios.get(`https://belanjalagiyuk.shop/driver/profile`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -172,31 +175,33 @@ const Profile = () => {
           </div>  
           <div className='py-10 px-4 space-y-2'>
             <div>
-              <p className='text-secondary font-medium'>Username</p>
+              <p className='text-secondary font-medium'>Governtment Name</p>
               <div className='flex gap-4 py-4 items-center font-medium'>
                 <i className="fa-regular fa-circle-user"></i>
-                <p>{data.username}</p>
+                <p>{data.goverment_name}
+                {/* {JSON.stringify(data)} */}
+                </p>
               </div>
             </div>
             <div>
               <p className='text-secondary font-medium'>Nama Lengkap</p>
               <div className='flex gap-4 py-4 items-center font-medium'>
                 <i className="fa-regular fa-circle-user"></i>
-                <p>{data.document.fullname ? data.document.fullname : 'Belum isi Data'}</p>
+                <p>{data?.fullname }</p>
               </div>
             </div>
             <div>
               <p className='text-secondary font-medium'>Email</p>
               <div className='flex gap-4 py-4 items-center font-medium'>
                 <i className="fa-regular fa-envelope"></i>
-                <p>{data.email}</p>
+                <p>{data?.email}</p>
               </div>
             </div>
             <div>
               <p className='text-secondary font-medium'>Jenis Kelamin</p>
               <div className='flex gap-4 py-4 items-center font-medium'>
                 <i className="fa-solid fa-venus-mars"></i>
-                <p>{data.document.gender ? data.document.gender : 'Belum isi Data'}</p>
+                <p>{data?.document?.gender ? data.document?.gender : 'Laki Laki'}</p>
               </div>
             </div>
           </div>
