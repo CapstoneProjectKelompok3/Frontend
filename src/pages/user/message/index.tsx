@@ -19,8 +19,8 @@ const Message = () => {
   const navigate = useNavigate();
   const idUser = Cookie.get("uid");
   const idRoom = Cookie.get("roomid");
+  const adminName = Cookie.get('admin')
   const socket: Socket = io("https://api.flattenbot.site");
-  
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -92,7 +92,7 @@ const Message = () => {
             <div onClick={() => navigate('/lokasi')} className="bg-none  w-15 h-15 flex items-center justify-center ">
               <i className="fa-solid fa-location-dot text-2xl text-white"></i>
             </div>
-            <div className="font-semibold text-white">Costumer Service</div>
+            <div className="font-semibold text-white">{adminName}</div>
             <div onClick={() => navigate('/riwayat')} className="bg-none  w-15 h-15 flex items-center justify-center ">
               <i className="fa-solid fa-clock-rotate-left text-2xl text-white"></i>
             </div>
