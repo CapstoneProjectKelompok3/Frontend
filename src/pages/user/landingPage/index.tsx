@@ -57,6 +57,8 @@ const LandingPage = () => {
               `https://api.flattenbot.site/message/newmessage`,
               {
                 message: transcript,
+                latitude: latitude,
+                longitude: longitude
               },
               {
                 headers: {
