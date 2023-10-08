@@ -12,6 +12,7 @@ import { validateProfile, validateReset } from '../../../validate/auth';
 const Profile = () => {
   const token = Cookie.get("token");
   const id = Cookie.get("uid");
+  const role = Cookie.get("role");
   const navigate = useNavigate()
   const [edit, setEdit] = useState(false)
   const [modal, setModal] = useState(false)

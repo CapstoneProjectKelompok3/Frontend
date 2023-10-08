@@ -1,7 +1,7 @@
 import Cookie from "js-cookie";
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import { DirectionsRenderer, GoogleMap, Marker, MarkerF, useLoadScript } from "@react-google-maps/api";
 import Button from "../../../component/Button";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -15,18 +15,105 @@ const DetailJob = () => {
     lng: number;
   } | null>();
 
+  const [directions, setDirections] = useState(null);
   const [confirm, setConfirm] = useState<boolean>(true);
   const [reason, setReason] = useState<boolean>(false);
   const [done, setDone] = useState<boolean>(false);
+  const [data, setData] = useState<any>([]);
+  const [currentPosition, setCurrentPosition] = useState(null);
+  const [dataEmergency, setDataEmergency] = useState<any>([]);
+  const locationTarget = {
+    lat: dataEmergency.latitude,
+    lng: dataEmergency.longitude,
+  };
 
-  const confirmJob = () => {
+  const requestDirections=() => {
+    const directionsService = new window.google.maps.DirectionsService();
+
+    directionsService.route(
+      {
+        origin: {lat: data.latitude, lng: data.longitude},
+        destination: locationTarget,
+        travelMode: 'DRIVING', // Anda dapat mengganti mode perjalanan sesuai kebutuhan (e.g., DRIVING, WALKING)
+      },
+      (result, status) => {
+        if (status === 'OK') {
+          setDirections(result);
+        } else {
+          console.error(`Error fetching directions: ${status}`);
+        }
+      }
+    );
+
+    console.log('Current Directions',directions)
+
+    intervalId()
+  }
+
+  const intervalId = setInterval(() => {
+    const path = directions?.routes[0]?.overview_path; // Ambil jalur rute
+
+    if (path && path.length > 0) {
+      setCurrentPosition(path.shift()); // Geser posisi marker ke titik berikutnya di jalur
+    }
+  }, 300);
+
+  const getData = () => {
     axios
-      .get("https://belanjalagiyuk.shop/driver/confirm", {
+      .get("https://belanjalagiyuk.shop/driver/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
+        setData(res?.data?.data);
+      })
+      .catch(() => {
+        toast.error("Gagal mendapatkan data");
+      });
+  };
+
+  const getDataEmergency = async () => {
+    try {
+      const response = await axios.get(
+        `https://belanjalagiyuk.shop/emergencies/${data.emergency_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setDataEmergency(response?.data?.data);
+    } catch (error) {
+      toast.error("Gagal mendapatkan data");
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (data.emergency_id) {
+      getDataEmergency();
+    }
+  }, [data.emergency_id]);
+
+  const confirmJob = () => {
+    axios
+      .post(
+        "https://belanjalagiyuk.shop/driver/confirm",
+        {
+          is_accepted: true,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        requestDirections()
         setDone(true);
         setConfirm(false);
       })
@@ -35,35 +122,58 @@ const DetailJob = () => {
       });
   };
 
-  const rejectJob = () => {};
-
-  const confirmDone = () => {
-    axios.post("https://belanjalagiyuk.shop/drivers/finished", {
-      latitude: -6.21279,
-      longitude: 106.8946959,
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then((res) => {
-      toast.success('Tugas Anda telah selesai. Terima Kasih !')
-      navigate('/riwayat-petugas')
-    })
-    .catch(() => {
-      toast.error('Gagal menyelesaikan tugas')
-    })
+  const rejectJob = () => {
+    axios
+      .post(
+        "https://belanjalagiyuk.shop/driver/confirm",
+        {
+          is_accepted: false,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        navigate("/dashboard-petugas");
+      })
+      .catch(() => {
+        toast.error("Gagal menolak pekerjaan");
+      });
   };
 
-  // useEffect(() => {
-  //   if (!token) {
-  //     navigate('/login')
-  //     setTimeout(() => {
-  //       toast.error("Silahkan Login Terlebih Dahulu")
-  //     }, 200);
-  //   }
-  // }, [])
-  
+  const confirmDone = () => {
+    axios
+      .post(
+        `https://belanjalagiyuk.shop/drivers/finished?emergenci_id=${data.emergency_id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        toast.success("Tugas Anda telah selesai. Terima Kasih !");
+        setTimeout(() => {
+          navigate("/riwayat-petugas");
+        }, 1500);
+      })
+      .catch(() => {
+        toast.error("Gagal menyelesaikan tugas");
+      });
+  };
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+      setTimeout(() => {
+        toast.error("Silahkan Login Terlebih Dahulu");
+      }, 200);
+    }
+  }, []);
+
   useEffect(() => {
     if (role === "user") {
       navigate("/beranda");
@@ -110,11 +220,8 @@ const DetailJob = () => {
         zoom={15}
         onClick={handleMapClick}
       >
-        {selected ? (
-          <Marker position={selected} draggable={true} />
-        ) : (
-          <Marker position={{ lat: -6.2, lng: 106.816666 }} draggable={true} />
-        )}
+        {directions && <DirectionsRenderer directions={directions} />}
+        {currentPosition && <MarkerF position={currentPosition} label="Current Position" />}
       </GoogleMap>
       {confirm === true ? (
         <div className="absolute bottom-0 w-full bg-white text-center px-3 py-5 rounded-tr-2xl rounded-tl-2xl">
@@ -127,13 +234,13 @@ const DetailJob = () => {
           </div>
           <div className="flex flex-row justify-between px-6 py-2">
             <Button
-              label="Cancel"
+              label="Tolak"
               className="bg-secondary focus:bg-secondary border-secondary outline-secondary"
               onClick={() => {
                 setReason(true), setConfirm(false);
               }}
             />
-            <Button label="Next" onClick={() => confirmJob()} />
+            <Button label="Terima" onClick={() => confirmJob()} />
           </div>
         </div>
       ) : null}
