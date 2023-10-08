@@ -23,19 +23,20 @@ import RegisterPetugas from "./pages/officer/register";
 import DataVehicle from "./pages/admin/dataVehicle";
 import Forgot from "./pages/forgot";
 import Verify from "./pages/verify";
+import Landing from "./pages/landing";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<LoginPage />} />
+        <Route index element={<Landing />} />
         <Route element={<LoginPage />} path="/login" />
         <Route element={<LoginPetugas />} path="/login-petugas" />
         <Route element={<Register />} path="/register" />
         <Route element={<RegisterPetugas />} path="/register-petugas" />
         
         <Route element={<Forgot />} path="/forgot-password" />
-        <Route element={<Verify />} path="/verify-email/:id" />
+        <Route element={<Verify />} path="/verify-email/:key" />
 
         <Route element={<Dashboard />} path="/dashboard" />
         <Route element={<DataAdmin />} path="/data-admin" />

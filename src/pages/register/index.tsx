@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Input from "../../component/Input";
 import Button from "../../component/Button";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,7 +7,8 @@ import { validateRegister } from "../../validate/auth";
 import axios from "axios";
 import Cookie from "js-cookie";
 import toast from "react-hot-toast";
-
+import logo from '../../../public/logo.png'
+import banner from '../../../public/loginBackground.png'
 interface RegistrationFormData {
   email: string;
   username: string;
@@ -18,6 +19,8 @@ const Register = () => {
   const navigate = useNavigate();
   const token = Cookie.get('token')
   const role = Cookie.get('role')
+  const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     if (token) {
       if (role === 'admin' || role === 'superadmin') {
@@ -65,7 +68,7 @@ const Register = () => {
           <div className="flex flex-col md:place-items-center">
             <div>
               <img
-                src="../../../public/logo.png"
+                src={logo}
                 alt=""
                 className="w-28 mb-3 md:block hidden"
               />
@@ -130,9 +133,14 @@ const Register = () => {
                 <Input
                   placeholder="*************"
                   label="Password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
-                  icon={<i className="fa-solid fa-key"></i>}
+                  icon={<div
+                    className="transform cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <i className="fa-solid fa-eye-slash"></i> : <i className="fa-solid fa-eye"></i>}
+                  </div>}
                   className="w-full"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -159,6 +167,13 @@ const Register = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="hidden lg:block w-[60vw] h-screen">
+        <img
+          src={banner}
+          alt=""
+          className="h-screen"
+        />
       </div>
     </section>
   );

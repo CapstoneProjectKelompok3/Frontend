@@ -6,6 +6,11 @@ import Popup from "../../../component/Popup";
 import Button from "../../../component/Button";
 import axios from "axios";
 
+interface Feedback {
+  id?: number
+  name?: string
+}
+
 const History = () => {
   const token = Cookie.get("token");
   const role = Cookie.get("role");
@@ -14,13 +19,16 @@ const History = () => {
   const [openModal, setOpenModal] = useState(false)
   const [rating, setRating] = useState(0)
   const [content, setContent] = useState('')
+  const [feedback, setFeedback] = useState<Feedback[]>([])
+  const [emergency, setEmergency] = useState<Feedback>()
   const pathname = location.pathname;
+
 
   const handleClose = () => {
     setOpenModal(false)
   }
-  console.log(rating)
   const star = Array(5).fill(0)
+
   useEffect(() => {
     if (!token) {
       navigate('/login')
@@ -29,30 +37,49 @@ const History = () => {
       }, 200);
     }
   }, [])
+  useEffect(() => {
+    if (role === 'admin' || role === 'superadmin') {
+      navigate('/dashboard')
+    }
+  })
+  useEffect(() => {
+    getFeedback()
+  }, [])
+  const getFeedback = async () => {
+    try {
+      const response = await axios.get(`https://belanjalagiyuk.shop/emergencies`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setFeedback(response.data.data)
+      console.log(response.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  const idUser = Cookie.get('id')
+  const idUser = Cookie.get('uid')
   const handleFeedback = () => {
+    console.log(idUser)
+    console.log(emergency)
     axios.post(`https://api.flattenbot.site/feedback/${idUser}`, {
       content: content,
       rating: rating,
-      emergencies_id: 2
+      emergencies_id: emergency?.id
     }, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     }).then((response) => {
       console.log(response)
-      // toast.success(response.data.message)
+      toast.success(response.data.message)
     }).catch((error) => {
       console.log(error.response.data)
     })
   }
 
-  useEffect(() => {
-    if (role === 'admin' || role === 'superadmin') {
-      navigate('/dashboard')
-    }
-  })
+
   const handleClick = (value: number) => {
     setRating(value)
   }
@@ -63,26 +90,34 @@ const History = () => {
           History Laporan
         </div>
         <div className="w-full px-5 space-y-4">
-          <div className='w-full h-1/2 px-5 py-3 bg-primary rounded-xl '>
-            <div className="flex gap-5 items-center">
-              <div className="w-10 h-10 rounded-xl bg-white">
-                <i className="fa-regular fa-file-check text-black"></i>
-              </div>
-              <div className="w-full flex justify-between">
-                <div className="flex flex-col">
-                  <div className="font-semibold text-white">
-                    Laporan 1
+          {
+            feedback.length > 0 ? (
+              feedback && feedback.map((element, index) => {
+                return (
+                  <div key={index} className='w-full h-1/2 px-5 py-3 bg-primary rounded-xl '>
+                    <div className="flex gap-5 items-center">
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white">
+                        <i className="fa-solid fa-folder-open"></i>
+                      </div>
+                      <div className="w-full flex justify-between items-center">
+                        <div className="font-semibold text-white">
+                          {element.name}
+                        </div>
+                        <div onClick={() => { setOpenModal(true), setEmergency(element) }} className="drop-shadow-xl shadow-lg px-10 py-2 font-semibold hover:bg-gray-200 cursor-pointer bg-white rounded-md">
+                          Nilai
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-white font-light text-sm">
-                    10:30 AM - 12-09-2023
-                  </div>
-                </div>
-                <div onClick={() => setOpenModal(true)} className="drop-shadow-xl shadow-lg px-10 py-2 font-semibold hover:bg-gray-200 cursor-pointer bg-white rounded-md">
-                  Nilai
-                </div>
-              </div>
-            </div>
-          </div>
+                )
+              })
+            ) : (
+              <>
+                Loading
+              </>
+            )
+          }
+
         </div>
       </div>
       {
@@ -97,11 +132,8 @@ const History = () => {
                   <div className="space-y-5 py-2">
                     <div className="w-full bg-primary text-white font-semibold p-5 rounded-md">
                       <div className="flex flex-col">
-                        <div className="font-semibold text-white">
-                          Laporan 1
-                        </div>
-                        <div className="text-white font-light text-sm">
-                          10:30 AM - 12-09-2023
+                        <div className="font-extrabold text-white">
+                          {emergency?.name}
                         </div>
                       </div>
                     </div>

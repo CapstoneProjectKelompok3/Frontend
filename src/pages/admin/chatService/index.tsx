@@ -18,11 +18,10 @@ interface Message {
 interface Room {
   idRoom: number;
   username: string;
+  emergencyId: number;
   senderId: number | string;
 }
 const ChatService = () => {
-  const [selectedPerson, setSelectedPerson] = useState<any>(1);
-
   let [police, setPolice] = useState<number>(0);
   let [damkar, setDamkar] = useState<number>(0);
   let [ambulance, setAmbulance] = useState<number>(0);
@@ -38,13 +37,17 @@ const ChatService = () => {
   const [nameChat, setNameChat] = useState<string>("");
   const [id, setId] = useState<number>(0);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [emergency, setEmergency] = useState<number>(0);
   const [chat, setChat] = useState<string>("");
   const [showAttachOptions, setShowAttachOptions] = useState(false);
   const socket: Socket = io("https://api.flattenbot.site");
   const idUser = Cookie.get("uid");
   const token = Cookie.get("token");
-  const navigate = useNavigate()
   const role = Cookie.get('role')
+  const latitude = Cookie.get('userLatitude')
+  const longitude = Cookie.get('userLongitude')
+  const navigate = useNavigate()
+
   const rootElement = document.documentElement;
   rootElement.style.backgroundColor = "#FAFAFA";
   const toggleAttachOptions = () => {
@@ -103,6 +106,23 @@ const ChatService = () => {
     }
   };
 
+  const sendDriver = () => {
+    axios.post(`https://belanjalagiyuk.shop/drivers/assign?police=${police}&hospital=${ambulance}&firestation=${damkar}&dishub=${dishub}&SAR=${sar}&emergency_id=${emergency}`,{
+      longitude: latitude,
+      latitude: longitude
+    },{
+      headers:{
+        Authorization : `Bearer ${token}`
+      }
+    }).then((response)=> {
+      console.log(response.data)
+      toast.success("Unit Berhasil Dikerahkan")
+      setShowAttachOptions(false)
+    }).catch((error)=>{
+      console.log(error)
+    })
+  }
+
   const sendMessage = async () => {
     console.log(idUser)
     socket.emit("adminMessage", {
@@ -134,32 +154,6 @@ const ChatService = () => {
     }
   })
 
-  const increase = (num: number) => {
-    switch (num) {
-      case 1:
-        setPolice((police += 1));
-        break;
-      case 2:
-        setAmbulance((ambulance += 1));
-        break;
-      case 3:
-        setDamkar((damkar += 1));
-        break;
-      case 4:
-        setSar((sar += 1));
-        break;
-      default:
-        setDishub((dishub += 1));
-    }
-  };
-
-  const decrease = () => {
-    if (police > 0) {
-      setPolice((police -= 1));
-    }
-  };
-
-
   return (
     <section>
       <Navbar />
@@ -184,6 +178,7 @@ const ChatService = () => {
                         onClick={() => {
                           updateSelectedPersonAndGetDataMessage(element.idRoom),
                             setId(element.idRoom),
+                            setEmergency(element.emergencyId),
                             setNameChat(element.username);
                         }}
                         className="bg-[#D9D9D9] hover:bg-[#D9D9D9] my-2 p-4 flex cursor-pointer items-center gap-4 px-4"
@@ -286,9 +281,7 @@ const ChatService = () => {
                     {checkedPolice ? (
                       <div className="flex gap-4 items-center bg-primary rounded-md px-2 text-white">
                         <div
-                          onClick={() => {
-                            decrease();
-                          }}
+                          onClick={() => setPolice(police - 1)}
                           className="p-1 hover:border-none"
                         >
                           <i className="fa-solid fa-minus"></i>
@@ -300,9 +293,7 @@ const ChatService = () => {
                           style={{ appearance: "none" }}
                         />
                         <div
-                          onClick={() => {
-                            increase(1);
-                          }}
+                          onClick={() => setPolice(police + 1)}
                           className="p-1"
                         >
                           <i className="fa-solid fa-plus"></i>
@@ -322,9 +313,7 @@ const ChatService = () => {
                     {checkedAmbulance ? (
                       <div className="flex gap-4 items-center bg-primary rounded-md px-2 text-white">
                         <div
-                          onClick={() => {
-                            decrease();
-                          }}
+                          onClick={() => setAmbulance(ambulance - 1)}
                           className="p-1 hover:border-none"
                         >
                           <i className="fa-solid fa-minus"></i>
@@ -336,9 +325,7 @@ const ChatService = () => {
                           style={{ appearance: "none" }}
                         />
                         <div
-                          onClick={() => {
-                            increase(2);
-                          }}
+                          onClick={() => setAmbulance(ambulance + 1)}
                           className="p-1"
                         >
                           <i className="fa-solid fa-plus"></i>
@@ -358,9 +345,7 @@ const ChatService = () => {
                     {checkedDamkar ? (
                       <div className="flex gap-4 items-center bg-primary rounded-md px-2 text-white">
                         <div
-                          onClick={() => {
-                            decrease();
-                          }}
+                          onClick={() => setDamkar(damkar - 1)}
                           className="p-1 hover:border-none"
                         >
                           <i className="fa-solid fa-minus"></i>
@@ -372,9 +357,7 @@ const ChatService = () => {
                           style={{ appearance: "none" }}
                         />
                         <div
-                          onClick={() => {
-                            increase(3);
-                          }}
+                          onClick={() => setDamkar(damkar + 1)}
                           className="p-1"
                         >
                           <i className="fa-solid fa-plus"></i>
@@ -394,9 +377,7 @@ const ChatService = () => {
                     {checkedSar ? (
                       <div className="flex gap-4 items-center bg-primary rounded-md px-2 text-white">
                         <div
-                          onClick={() => {
-                            decrease();
-                          }}
+                          onClick={() => setSar(sar - 1)}
                           className="p-1 hover:border-none"
                         >
                           <i className="fa-solid fa-minus"></i>
@@ -408,9 +389,7 @@ const ChatService = () => {
                           style={{ appearance: "none" }}
                         />
                         <div
-                          onClick={() => {
-                            increase(4);
-                          }}
+                          onClick={() => setSar(sar + 1)}
                           className="p-1"
                         >
                           <i className="fa-solid fa-plus"></i>
@@ -430,9 +409,7 @@ const ChatService = () => {
                     {checkedDishub ? (
                       <div className="flex gap-4 items-center bg-primary rounded-md px-2 text-white">
                         <div
-                          onClick={() => {
-                            decrease();
-                          }}
+                          onClick={() => setDishub(dishub - 1)}
                           className="p-1 hover:border-none"
                         >
                           <i className="fa-solid fa-minus"></i>
@@ -444,9 +421,7 @@ const ChatService = () => {
                           style={{ appearance: "none" }}
                         />
                         <div
-                          onClick={() => {
-                            increase(5);
-                          }}
+                          onClick={() => setDishub(dishub + 1)}
                           className="p-1"
                         >
                           <i className="fa-solid fa-plus"></i>
@@ -461,7 +436,7 @@ const ChatService = () => {
                     ></textarea>
                   </div>
                   <div>
-                    <Button label="Kerahkan" className="w-full" />
+                    <Button label="Kerahkan" onClick={sendDriver} className="w-full" />
                   </div>
                 </div>
               )}
