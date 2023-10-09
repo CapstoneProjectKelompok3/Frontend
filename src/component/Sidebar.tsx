@@ -20,7 +20,7 @@ const Sidebar = () => {
 
   const variant = {
     expand: { width: '5%' },
-    nonExpand: { width: '15%' },
+    nonExpand: { width: '20%' },
   };
   return (
     <motion.div
