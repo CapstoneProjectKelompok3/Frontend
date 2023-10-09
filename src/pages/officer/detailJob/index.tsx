@@ -1,7 +1,13 @@
 import Cookie from "js-cookie";
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { DirectionsRenderer, GoogleMap, Marker, MarkerF, useLoadScript } from "@react-google-maps/api";
+import {
+  DirectionsRenderer,
+  GoogleMap,
+  Marker,
+  MarkerF,
+  useLoadScript,
+} from "@react-google-maps/api";
 import Button from "../../../component/Button";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -20,6 +26,8 @@ const DetailJob = () => {
   const [reason, setReason] = useState<boolean>(false);
   const [done, setDone] = useState<boolean>(false);
   const [data, setData] = useState<any>([]);
+  console.log(data);
+
   const [currentPosition, setCurrentPosition] = useState(null);
   const [dataEmergency, setDataEmergency] = useState<any>([]);
   const locationTarget = {
@@ -27,17 +35,17 @@ const DetailJob = () => {
     lng: dataEmergency.longitude,
   };
 
-  const requestDirections=() => {
+  const requestDirections = () => {
     const directionsService = new window.google.maps.DirectionsService();
 
     directionsService.route(
       {
-        origin: {lat: data.latitude, lng: data.longitude},
+        origin: { lat: data.latitude, lng: data.longitude },
         destination: locationTarget,
-        travelMode: 'DRIVING', // Anda dapat mengganti mode perjalanan sesuai kebutuhan (e.g., DRIVING, WALKING)
+        travelMode: "DRIVING", // Anda dapat mengganti mode perjalanan sesuai kebutuhan (e.g., DRIVING, WALKING)
       },
       (result, status) => {
-        if (status === 'OK') {
+        if (status === "OK") {
           setDirections(result);
         } else {
           console.error(`Error fetching directions: ${status}`);
@@ -45,10 +53,10 @@ const DetailJob = () => {
       }
     );
 
-    console.log('Current Directions',directions)
+    console.log("Current Directions", directions);
 
-    intervalId()
-  }
+    intervalId();
+  };
 
   const intervalId = setInterval(() => {
     const path = directions?.routes[0]?.overview_path; // Ambil jalur rute
@@ -90,6 +98,13 @@ const DetailJob = () => {
   };
 
   useEffect(() => {
+    if (data.driving_status === "on_trip") {
+      setConfirm(false);
+      setDone(true);
+    }
+  }, [data.driving_status]);
+
+  useEffect(() => {
     getData();
   }, []);
 
@@ -113,7 +128,7 @@ const DetailJob = () => {
         }
       )
       .then((res) => {
-        requestDirections()
+        requestDirections();
         setDone(true);
         setConfirm(false);
       })
@@ -221,7 +236,9 @@ const DetailJob = () => {
         onClick={handleMapClick}
       >
         {directions && <DirectionsRenderer directions={directions} />}
-        {currentPosition && <MarkerF position={currentPosition} label="Current Position" />}
+        {currentPosition && (
+          <MarkerF position={currentPosition} label="Current Position" />
+        )}
       </GoogleMap>
       {confirm === true ? (
         <div className="absolute bottom-0 w-full bg-white text-center px-3 py-5 rounded-tr-2xl rounded-tl-2xl">

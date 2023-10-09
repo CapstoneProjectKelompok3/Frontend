@@ -24,6 +24,7 @@ import DataVehicle from "./pages/admin/dataVehicle";
 import Forgot from "./pages/forgot";
 import Verify from "./pages/verify";
 import Landing from "./pages/landing";
+import Testing from "./pages/testing";
 
 const App = () => {
   return (
