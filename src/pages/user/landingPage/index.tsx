@@ -54,7 +54,7 @@ const LandingPage = () => {
           navigate("/lokasi");
           axios
             .post(
-              `https://api.flattenbot.site/message/newmessage`,
+              `https://09ae-103-171-182-11.ngrok-free.app/message/newmessage`,
               {
                 message: transcript,
                 latitude: latitude,

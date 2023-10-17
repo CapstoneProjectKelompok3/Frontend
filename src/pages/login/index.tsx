@@ -20,7 +20,7 @@ const LoginPage = () => {
     validationSchema: validateLogin,
     onSubmit: (values) => {
       axios
-        .post("https://api.flattenbot.site/users/login", {
+        .post("https://09ae-103-171-182-11.ngrok-free.app/users/login", {
           email: values.email,
           password: values.password,
         })

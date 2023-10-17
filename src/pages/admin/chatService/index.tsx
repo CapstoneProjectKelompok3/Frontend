@@ -76,7 +76,7 @@ const ChatService = () => {
   const getChat = async () => {
     try {
       const response = await axios.get(
-        `https://api.flattenbot.site/message/getroom`,
+        `https://09ae-103-171-182-11.ngrok-free.app/message/getroom`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -92,7 +92,7 @@ const ChatService = () => {
   const getDataMessage = async (selectedValue: number) => {
     try {
       const response = await axios.get(
-        `https://api.flattenbot.site/message/getmessage/${selectedValue}`,
+        `https://09ae-103-171-182-11.ngrok-free.app/message/getmessage/${selectedValue}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
