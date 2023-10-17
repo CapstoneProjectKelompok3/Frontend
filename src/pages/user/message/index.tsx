@@ -20,7 +20,7 @@ const Message = () => {
   const idUser = Cookie.get("uid");
   const idRoom = Cookie.get("roomid");
   const adminName = Cookie.get('admin')
-  const socket: Socket = io("https://api.flattenbot.site");
+  const socket: Socket = io("https://09ae-103-171-182-11.ngrok-free.app");
   useEffect(() => {
     if (!token) {
       navigate("/login");

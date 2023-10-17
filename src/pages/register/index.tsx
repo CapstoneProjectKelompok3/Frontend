@@ -41,7 +41,7 @@ const Register = () => {
     validationSchema: validateRegister,
     onSubmit: (values: any) => {
       axios
-        .post("https://api.flattenbot.site/users/register", {
+        .post("https://09ae-103-171-182-11.ngrok-free.app/users/register", {
           email: values.email,
           username: values.username,
           nik: values.nik,
